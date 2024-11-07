@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
 import java.io.*;
+import java.util.Scanner;
 
 public class PayrollManager {
     private Map<String, Employee> employees;
@@ -233,19 +234,57 @@ public class PayrollManager {
         System.out.println("--------------------------------------------------");
     }
 
+    public void displayPendingOvertimeRequests() {
+        System.out.println("\nPending Overtime Approvals");
+        System.out.println("--------------------------------------------------");
+        System.out.printf("%-10s %-20s %-12s %-10s %-15s%n", 
+            "ID", "Name", "Hours", "Date", "Status");
+        
+        boolean foundPending = false;
+        for (Employee emp : employees.values()) {
+            for (TimeRecord record : emp.getTimeRecords()) {
+                double hours = record.getHoursWorked();
+                if (hours > REGULAR_HOURS && !record.isApproved()) {
+                    foundPending = true;
+                    System.out.printf("%-10s %-20s %-12.2f %-10s %-15s%n",
+                        emp.getEmployeeId(),
+                        emp.getName(),
+                        hours,
+                        record.getStartTime().toLocalDate(),
+                        "Pending");
+                }
+            }
+        }
+        
+        if (!foundPending) {
+            System.out.println("No pending overtime approvals found.");
+        }
+        System.out.println("--------------------------------------------------");
+    }
+
     public boolean approveOvertime(String employeeId, LocalDate date) {
         Employee employee = employees.get(employeeId);
-        if (employee == null) return false;
+        if (employee == null) {
+            System.out.println("Employee not found");
+            return false;
+        }
 
         boolean overtimeFound = false;
         for (TimeRecord record : employee.getTimeRecords()) {
             if (record.getStartTime().toLocalDate().equals(date) && 
-                record.getHoursWorked() > REGULAR_HOURS) {
+                record.getHoursWorked() > REGULAR_HOURS && 
+                !record.isApproved()) {
                 record.setOvertime(true);
                 record.setApproved(true);
                 saveTimeRecord(employee, record);
                 overtimeFound = true;
+                System.out.println("Overtime approved for " + employee.getName());
+                break;
             }
+        }
+        
+        if (!overtimeFound) {
+            System.out.println("No pending overtime found for this employee on " + date);
         }
         return overtimeFound;
     }
@@ -310,5 +349,29 @@ public class PayrollManager {
         } catch (Exception e) {
             System.out.println("Error processing time entry: " + e.getMessage());
         }
+    }
+
+    public void displayOvertimeStatus(LocalDate date) {
+        System.out.println("\nOvertime Status for " + date);
+        System.out.println("--------------------------------------------------");
+        System.out.printf("%-10s %-20s %-12s %-10s %-10s%n", 
+            "ID", "Name", "Hours", "Overtime", "Approved");
+        
+        for (Employee emp : employees.values()) {
+            for (TimeRecord record : emp.getTimeRecords()) {
+                if (record.getStartTime().toLocalDate().equals(date)) {
+                    double hours = record.getHoursWorked();
+                    if (hours > REGULAR_HOURS) {
+                        System.out.printf("%-10s %-20s %-12.2f %-10s %-10s%n",
+                            emp.getEmployeeId(),
+                            emp.getName(),
+                            hours,
+                            "Yes",
+                            record.isApproved() ? "Yes" : "Pending");
+                    }
+                }
+            }
+        }
+        System.out.println("--------------------------------------------------");
     }
 }

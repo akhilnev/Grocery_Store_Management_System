@@ -122,16 +122,28 @@ public class PayrollSystem {
     }
 
     private void approveOvertime() {
-        System.out.print("Enter employee ID: ");
-        String employeeId = scanner.nextLine();
+        payrollManager.displayPendingOvertimeRequests();
+        
+        System.out.print("\nEnter employee ID to approve (or press Enter to cancel): ");
+        String employeeId = scanner.nextLine().trim();
+        
+        if (employeeId.isEmpty()) {
+            System.out.println("Approval cancelled");
+            return;
+        }
+        
         System.out.print("Enter date (yyyy-MM-dd): ");
         String dateStr = scanner.nextLine();
         
-        LocalDate date = LocalDate.parse(dateStr, DateTimeFormatter.ISO_LOCAL_DATE);
-        if (payrollManager.approveOvertime(employeeId, date)) {
-            System.out.println("Overtime approved successfully");
-        } else {
-            System.out.println("Failed to approve overtime. Check employee ID and date");
+        try {
+            LocalDate date = LocalDate.parse(dateStr, DateTimeFormatter.ISO_LOCAL_DATE);
+            if (payrollManager.approveOvertime(employeeId, date)) {
+                System.out.println("Overtime approved successfully");
+            } else {
+                System.out.println("Failed to approve overtime. Check employee ID and date");
+            }
+        } catch (Exception e) {
+            System.out.println("Invalid date format. Please use yyyy-MM-dd");
         }
     }
 
