@@ -1,3 +1,9 @@
+/**
+ * Model class representing a product in the inventory system
+ * with its properties and state.
+ *
+ * @author Akhilesh Nevatia
+ */
 package inventory.model;
 
 import java.time.LocalDate;
@@ -11,7 +17,17 @@ public class Product {
     private LocalDate expirationDate;
     private boolean isObsolete;
 
-    public Product(String id, String name, double price, int stockLevel, String supplier, LocalDate expirationDate) {
+    /**
+     * Creates a new product with the specified details
+     * @param id Unique identifier for the product
+     * @param name Product name
+     * @param price Product price
+     * @param stockLevel Current stock level
+     * @param supplier Supplier name
+     * @param expirationDate Product expiration date
+     */
+    public Product(String id, String name, double price, int stockLevel, 
+                  String supplier, LocalDate expirationDate) {
         this.id = id;
         this.name = name;
         this.price = price;

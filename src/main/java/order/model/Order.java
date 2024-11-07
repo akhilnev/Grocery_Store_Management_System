@@ -5,6 +5,13 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Model class representing an order with its items, payment status,
+ * and related information.
+ *
+ * @author Akhilesh Nevatia
+ * @author Hrishikesha
+ */
 public class Order {
     private String orderId;
     private String storeId;

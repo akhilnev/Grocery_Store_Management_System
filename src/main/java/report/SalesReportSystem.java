@@ -6,6 +6,12 @@ import java.util.Scanner;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Main system class that handles the generation and management
+ * of sales reports.
+ *
+ * @author Hrishikesha
+ */
 public class SalesReportSystem {
     private Scanner scanner;
     private String storeId;

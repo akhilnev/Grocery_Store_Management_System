@@ -5,16 +5,28 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Model class representing a return request with its items
+ * and processing status.
+ *
+ * @author Hrishikesha
+ */
 public class Return {
-    private String returnId;
-    private String orderId;
-    private String storeId;
-    private Map<Product, ReturnItem> items;
-    private boolean approved;
-    private String refundMethod;
-    private double refundAmount;
-    private LocalDateTime returnDate;
+    private String returnId;          // Unique identifier for the return
+    private String orderId;           // Original order ID
+    private String storeId;           // Store identifier
+    private Map<Product, ReturnItem> items;  // Items being returned
+    private boolean approved;         // Return approval status
+    private String refundMethod;      // Method of refund
+    private double refundAmount;      // Total refund amount
+    private LocalDateTime returnDate; // Date and time of return
 
+    /**
+     * Creates a new return request
+     * @param returnId Unique identifier for the return
+     * @param orderId Original order identifier
+     * @param storeId Store identifier
+     */
     public Return(String returnId, String orderId, String storeId) {
         this.returnId = returnId;
         this.orderId = orderId;

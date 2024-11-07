@@ -6,11 +6,22 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Service class that manages return operations and inventory updates
+ * for returned products.
+ *
+ * @author Hrishikesha
+ */
 public class ReturnManager {
     private Map<String, Return> returns;
     private String storeId;
     private InventoryManager inventoryManager;
 
+    /**
+     * Creates a new return manager for a store
+     * @param storeId Store identifier
+     * @param inventoryManager Inventory manager instance
+     */
     public ReturnManager(String storeId, InventoryManager inventoryManager) {
         this.storeId = storeId;
         this.inventoryManager = inventoryManager;

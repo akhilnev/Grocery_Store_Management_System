@@ -1,3 +1,9 @@
+/**
+ * Main PayrollSystem class that handles the user interface and interaction
+ * for employee time tracking and payroll management.
+ *
+ * @author Akhilesh Nevatia
+ */
 package employee;
 
 import employee.model.Employee;
@@ -7,10 +13,17 @@ import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 public class PayrollSystem {
+    // Manager instance to handle payroll operations
     private PayrollManager payrollManager;
+    // Scanner for user input
     private Scanner scanner;
+    // Store identifier
     private String storeId;
 
+    /**
+     * Constructor initializes the PayrollSystem with a specific store ID
+     * @param storeId The unique identifier for the store
+     */
     public PayrollSystem(String storeId) {
         this.storeId = storeId;
         this.payrollManager = new PayrollManager(storeId);

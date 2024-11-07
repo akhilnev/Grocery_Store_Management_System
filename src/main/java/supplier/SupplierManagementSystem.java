@@ -9,11 +9,24 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Main system class that handles the user interface and interaction
+ * for supplier management and shipment operations.
+ *
+ * @author Eshant Chintareddy
+ */
 public class SupplierManagementSystem {
+    // Manager for supplier operations
     private SupplierManager supplierManager;
+    // Scanner for user input
     private Scanner scanner;
+    // Store identifier
     private String storeId;
 
+    /**
+     * Constructor initializes the system with a specific store ID
+     * @param storeId The unique identifier for the store
+     */
     public SupplierManagementSystem(String storeId) {
         this.storeId = storeId;
         InventoryManager inventoryManager = new InventoryManager(new HeadOfficeManager());

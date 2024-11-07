@@ -12,13 +12,27 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.io.File;
 
-
+/**
+ * Main system class that handles the user interface and interaction
+ * for order management operations.
+ *
+ * @author Akhilesh Nevatia
+ * @author Hrishikesha
+ */
 public class OrderManagementSystem {
+    // Manager instance to handle inventory operations
     private InventoryManager inventoryManager;
+    // Scanner for user input
     private Scanner scanner;
+    // Current active order being processed
     private Order currentOrder;
+    // Store identifier
     private String storeId;
 
+    /**
+     * Constructor initializes the system with a specific store ID
+     * @param storeId The unique identifier for the store
+     */
     public OrderManagementSystem(String storeId) {
         this.storeId = storeId;
         this.inventoryManager = new InventoryManager(new HeadOfficeManager());
@@ -67,6 +81,11 @@ public class OrderManagementSystem {
         }
     }
 
+    /**
+     * Adds an item to the current order
+     * @param productId The ID of the product to add
+     * @param quantity The quantity to add
+     */
     private void addItemToOrder() {
         if (currentOrder == null) {
             System.out.println("Please create a new order first");
