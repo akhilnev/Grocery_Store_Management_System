@@ -7,53 +7,37 @@ import java.util.Map;
 
 public class Return {
     private String returnId;
-    private String originalOrderId;
+    private String orderId;
     private String storeId;
-    private Map<Product, Integer> items;
-    private double refundAmount;
+    private Map<Product, ReturnItem> items;
+    private boolean approved;
     private String refundMethod;
-    private boolean isApproved;
-    private boolean isDamaged;
+    private double refundAmount;
     private LocalDateTime returnDate;
 
-    public Return(String returnId, String originalOrderId, String storeId) {
+    public Return(String returnId, String orderId, String storeId) {
         this.returnId = returnId;
-        this.originalOrderId = originalOrderId;
+        this.orderId = orderId;
         this.storeId = storeId;
         this.items = new HashMap<>();
+        this.approved = false;
         this.returnDate = LocalDateTime.now();
-        this.isApproved = false;
-        this.isDamaged = false;
+        this.refundAmount = 0.0;
     }
-
-    // Getters and setters
-    public String getReturnId() { return returnId; }
-    public String getOriginalOrderId() { return originalOrderId; }
-    public String getStoreId() { return storeId; }
-    public Map<Product, Integer> getItems() { return items; }
-    public double getRefundAmount() { return refundAmount; }
-    public String getRefundMethod() { return refundMethod; }
-    public boolean isApproved() { return isApproved; }
-    public boolean isDamaged() { return isDamaged; }
-    public LocalDateTime getReturnDate() { return returnDate; }
 
     public void addItem(Product product, int quantity, boolean isDamaged) {
-        this.isDamaged = isDamaged;
-        items.put(product, quantity);
-        calculateRefund();
+        ReturnItem item = new ReturnItem(product, quantity, isDamaged);
+        items.put(product, item);
+        this.refundAmount += item.getRefundAmount();
     }
 
-    public void setRefundMethod(String refundMethod) {
-        this.refundMethod = refundMethod;
-    }
-
-    public void approve() {
-        this.isApproved = true;
-    }
-
-    private void calculateRefund() {
-        this.refundAmount = items.entrySet().stream()
-            .mapToDouble(entry -> entry.getKey().getPrice() * entry.getValue())
-            .sum();
-    }
+    public String getReturnId() { return returnId; }
+    public String getOrderId() { return orderId; }
+    public String getOriginalOrderId() { return orderId; }
+    public Map<Product, ReturnItem> getItems() { return items; }
+    public boolean isApproved() { return approved; }
+    public void setApproved(boolean approved) { this.approved = approved; }
+    public double getRefundAmount() { return refundAmount; }
+    public LocalDateTime getReturnDate() { return returnDate; }
+    public void setRefundMethod(String refundMethod) { this.refundMethod = refundMethod; }
 }

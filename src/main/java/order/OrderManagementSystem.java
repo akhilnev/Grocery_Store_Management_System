@@ -68,39 +68,33 @@ public class OrderManagementSystem {
     }
 
     private void addItemToOrder() {
-    if (currentOrder == null) {
-        System.out.println("Please create a new order first");
-        return;
-    }
+        if (currentOrder == null) {
+            System.out.println("Please create a new order first");
+            return;
+        }
 
-    System.out.print("Enter product ID: ");
-    String productId = scanner.nextLine();
-    System.out.print("Enter quantity: ");
-    int quantity = scanner.nextInt();
-    scanner.nextLine(); // Consume newline
+        System.out.print("Enter product ID: ");
+        String productId = scanner.nextLine();
+        System.out.print("Enter quantity: ");
+        int quantity = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
 
-    Product product = inventoryManager.getProduct(productId);
-    if (product == null) {
-        System.out.println("Product not found");
-        return;
-    }
+        Product product = inventoryManager.getProduct(productId);
+        if (product == null) {
+            System.out.println("Product not found");
+            return;
+        }
 
-    if (product.getStockLevel() < quantity) {
-        System.out.println("Insufficient stock. Available: " + product.getStockLevel());
-        return;
-    }
+        if (product.getStockLevel() < quantity) {
+            System.out.println("Insufficient stock. Available: " + product.getStockLevel());
+            return;
+        }
 
-    // Update inventory immediately when adding to order
-    if (inventoryManager.restockProduct(product.getId(), -quantity)) {
+        // Only add to order, don't update inventory yet
         currentOrder.addItem(product, quantity);
         System.out.println("Item added to order. Current total: $" + 
             String.format("%.2f", currentOrder.getTotalAmount()));
-        System.out.println("Stock updated. New stock level: " + 
-            inventoryManager.getProduct(productId).getStockLevel());
-    } else {
-        System.out.println("Failed to update inventory");
     }
-}
 
     private void createNewOrder() {
         if (currentOrder != null) {
@@ -205,6 +199,13 @@ public class OrderManagementSystem {
         }
 
         if (paymentMethod != null) {
+            // Update inventory only after payment is confirmed
+            for (Map.Entry<Product, Integer> entry : currentOrder.getItems().entrySet()) {
+                Product product = entry.getKey();
+                int quantity = entry.getValue();
+                inventoryManager.restockProduct(product.getId(), -quantity);
+            }
+            
             currentOrder.setPaymentMethod(paymentMethod);
             currentOrder.markAsPaid();
             saveSalesData();
