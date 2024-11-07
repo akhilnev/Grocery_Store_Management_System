@@ -1,6 +1,7 @@
 package returns;
 
 import returns.model.Return;
+import returns.model.ReturnItem;
 import returns.service.ReturnManager;
 import inventory.service.InventoryManager;
 import inventory.service.HeadOfficeManager;
@@ -170,14 +171,50 @@ public class ReturnManagementSystem {
     }
 
     private void approvePendingReturns() {
-        System.out.print("Enter return ID to approve: ");
-        String returnId = scanner.nextLine();
+        System.out.println("\nPending Returns:");
+        Map<String, Return> returns = returnManager.getPendingReturns();
         
-        if (returnManager.approveReturn(returnId)) {
-            System.out.println("Return approved successfully");
-            System.out.println("Inventory will be updated for non-damaged items");
-        } else {
-            System.out.println("Failed to approve return");
+        if (returns.isEmpty()) {
+            System.out.println("No pending returns");
+            return;
+        }
+
+        for (Return ret : returns.values()) {
+            System.out.println("\nReturn ID: " + ret.getReturnId());
+            System.out.println("Order ID: " + ret.getOrderId());
+            System.out.println("Items:");
+            
+            for (Map.Entry<Product, ReturnItem> entry : ret.getItems().entrySet()) {
+                Product product = entry.getKey();
+                ReturnItem item = entry.getValue();
+                System.out.printf("- %s (Quantity: %d, Damaged: %s)%n",
+                    product.getName(), item.getQuantity(), item.isDamaged() ? "Yes" : "No");
+            }
+            
+            System.out.print("Approve this return? (yes/no): ");
+            String response = scanner.nextLine();
+            
+            if (response.equalsIgnoreCase("yes")) {
+                // Update inventory for undamaged items
+                for (Map.Entry<Product, ReturnItem> entry : ret.getItems().entrySet()) {
+                    Product product = entry.getKey();
+                    ReturnItem item = entry.getValue();
+                    
+                    if (!item.isDamaged()) {
+                        boolean updated = inventoryManager.restockProduct(product.getId(), item.getQuantity());
+                        if (updated) {
+                            System.out.printf("Inventory updated: Added %d %s back to stock%n",
+                                item.getQuantity(), product.getName());
+                        } else {
+                            System.out.printf("Failed to update inventory for %s%n", product.getName());
+                        }
+                    }
+                }
+                returnManager.approveReturn(ret.getReturnId());
+                System.out.println("Return approved and inventory updated");
+            } else {
+                System.out.println("Return not approved");
+            }
         }
     }
 
