@@ -25,11 +25,13 @@ public class Main {
             System.out.println("\nGrocery Store Management System");
             System.out.println("1. Inventory Management (Store Manager)");
             System.out.println("2. Order Management (Store Cashier)");
-            System.out.println("3. Supplier Management (Store Employee)");
+            System.out.println("3. Supplier Management (Store Manager)");
             System.out.println("4. Sales Report (Store Manager)");
             System.out.println("5. Returns and Refunds (Store Manager)");
             System.out.println("6. Employee Payroll (Store Manager)");
-            System.out.println("7. Exit");
+            System.out.println("7. Customer Assistance (Service Associate)");
+            System.out.println("8. Security Management (Security Officer)");
+            System.out.println("9. Exit");
             System.out.print("Choose a use case: ");
 
             int choice = scanner.nextInt();
@@ -55,6 +57,12 @@ public class Main {
                     new PayrollSystem(storeId).start();
                     break;
                 case 7:
+                    new CustomerAssistanceManager(storeId).startAssistance();
+                    break;
+                case 8:
+                    new SecurityManager().startMonitoring();
+                    break;
+                case 9:
                     System.out.println("Exiting...");
                     return;
                 default:
