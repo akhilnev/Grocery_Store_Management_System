@@ -9,9 +9,12 @@ import java.util.Scanner;
 public class InventoryManagementSystem {
     private InventoryManager inventoryManager;
     private Scanner scanner;
+    private String storeId;
 
-    public InventoryManagementSystem() {
+    public InventoryManagementSystem(String storeId) {
+        this.storeId = storeId;
         this.inventoryManager = new InventoryManager(new HeadOfficeManager());
+        this.inventoryManager.setCurrentStore(storeId);
         this.scanner = new Scanner(System.in);
     }
 
