@@ -1,0 +1,3 @@
+ST001,Downtown Grocery,123 Main St,John Smith
+ST002,Uptown Market,456 High St,Jane Doe
+ST003,Riverside Store,789 River Rd,Bob Johnson
