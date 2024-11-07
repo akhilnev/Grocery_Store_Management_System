@@ -4,6 +4,7 @@ import store.model.Store;
 import store.service.StoreManager;
 import security.service.SecurityManager;
 import assistance.service.CustomerAssistanceManager;
+import marketing.service.MarketingManager;
 import java.util.Scanner;
 import supplier.SupplierManagementSystem;
 import report.SalesReportSystem;
@@ -31,7 +32,8 @@ public class Main {
             System.out.println("6. Employee Payroll (Store Manager)");
             System.out.println("7. Customer Assistance (Service Associate)");
             System.out.println("8. Security Management (Security Officer)");
-            System.out.println("9. Exit");
+            System.out.println("9. Marketing Management (Marketing Manager)");
+            System.out.println("10. Exit");
             System.out.print("Choose a use case: ");
 
             int choice = scanner.nextInt();
@@ -63,6 +65,9 @@ public class Main {
                     new SecurityManager().startMonitoring();
                     break;
                 case 9:
+                    new MarketingManager().start();
+                    break;
+                case 10:
                     System.out.println("Exiting...");
                     return;
                 default:
