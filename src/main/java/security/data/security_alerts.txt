@@ -1,0 +1,4 @@
+1,Camera Malfunction,High,2024-04-01 09:00:00
+2,Motion Detected in Restricted Area,Severe,2024-04-01 10:00:00
+3,Door Left Open,Medium,2024-04-01 11:30:00
+4,Unusual Activity in Parking Lot,High,2024-04-01 12:15:00

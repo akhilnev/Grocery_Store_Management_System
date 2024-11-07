@@ -6,7 +6,7 @@ import java.util.*;
 
 public class StoreManager {
     private Map<String, Store> stores;
-    private static final String STORES_FILE = "./src/main/java/store/data/stores.txt";
+    private static final String STORES_FILE = "src/main/java/store/data/stores.txt";
 
     public StoreManager() {
         this.stores = new HashMap<>();

@@ -2,6 +2,7 @@ import inventory.InventoryManagementSystem;
 import order.OrderManagementSystem;
 import store.model.Store;
 import store.service.StoreManager;
+import security.service.SecurityManager;
 import java.util.Scanner;
 
 public class Main {
@@ -19,7 +20,8 @@ public class Main {
             System.out.println("\nGrocery Store Management System");
             System.out.println("1. Inventory Management (Store Manager)");
             System.out.println("2. Order Management (Store Cashier)");
-            System.out.println("3. Exit");
+            System.out.println("3. Security Management (Security Officer)");
+            System.out.println("4. Exit");
             System.out.print("Choose a use case: ");
 
             int choice = scanner.nextInt();
@@ -33,6 +35,9 @@ public class Main {
                     new OrderManagementSystem(storeId).start();
                     break;
                 case 3:
+                    new SecurityManager().startMonitoring();
+                    break;
+                case 4:
                     System.out.println("Exiting...");
                     return;
                 default:
