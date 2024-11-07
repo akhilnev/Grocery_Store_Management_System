@@ -2,31 +2,85 @@ package inventory.service;
 
 import inventory.interfaces.InventoryInterface;
 import inventory.model.Product;
+import store.model.Store;
 import java.io.*;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class InventoryManager implements InventoryInterface {
-    private Map<String, Product> inventory;
+    private Map<String, Map<String, Product>> storeInventories; // storeId -> (productId -> Product)
     private HeadOfficeManager headOffice;
-    private static final String INVENTORY_FILE = "./src/main/java/inventory/service/inventory.txt";
+    private String currentStoreId;
 
     public InventoryManager(HeadOfficeManager headOffice) {
-        this.inventory = new HashMap<>();
+        this.storeInventories = new HashMap<>();
         this.headOffice = headOffice;
-        loadInventoryFromFile();
+        loadStoresAndInventory();
     }
 
+    public void setCurrentStore(String storeId) {
+        this.currentStoreId = storeId;
+        if (!storeInventories.containsKey(storeId)) {
+            storeInventories.put(storeId, new HashMap<>());
+        }
+    }
+
+    private void loadStoresAndInventory() {
+        // Load from stores.txt and their respective inventory files
+        try (BufferedReader reader = new BufferedReader(new FileReader("./src/main/java/store/data/stores.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                String storeId = parts[0];
+                loadStoreInventory(storeId);
+            }
+        } catch (IOException e) {
+            System.err.println("Error loading stores: " + e.getMessage());
+        }
+    }
+
+    private void loadStoreInventory(String storeId) {
+        String fileName = "./src/main/java/store/data/" + storeId + "_inventory.txt";
+        Map<String, Product> storeInventory = new HashMap<>();
+        
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length >= 6) {
+                    Product product = new Product(
+                        parts[0],  // id
+                        parts[1],  // name
+                        Double.parseDouble(parts[2]),  // price
+                        Integer.parseInt(parts[3]),    // stockLevel
+                        parts[4],  // supplier
+                        LocalDate.parse(parts[5])      // expirationDate
+                    );
+                    storeInventory.put(product.getId(), product);
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Creating new inventory file for store: " + storeId);
+        }
+        
+        storeInventories.put(storeId, storeInventory);
+    }
+
+    public Map<String, Product> getCurrentInventory() {
+        return storeInventories.getOrDefault(currentStoreId, new HashMap<>());
+    }
+
+    // Modify other methods to use currentStoreId
     @Override
     public boolean updateStock() {
-        saveInventoryToFile();
+        saveInventoryToFile(currentStoreId);
         return true;
     }
 
     @Override
     public boolean checkLowStock() {
-        List<Product> lowStockProducts = inventory.values().stream()
+        List<Product> lowStockProducts = getCurrentInventory().values().stream()
             .filter(p -> p.getStockLevel() < 10 && !p.isObsolete())
             .collect(Collectors.toList());
         return !lowStockProducts.isEmpty();
@@ -35,7 +89,7 @@ public class InventoryManager implements InventoryInterface {
     @Override
     public boolean trackExpiry() {
         LocalDate warningDate = LocalDate.now().plusDays(7);
-        List<Product> expiringProducts = inventory.values().stream()
+        List<Product> expiringProducts = getCurrentInventory().values().stream()
             .filter(p -> p.getExpirationDate() != null && 
                         p.getExpirationDate().isBefore(warningDate) &&
                         !p.isObsolete())
@@ -45,26 +99,30 @@ public class InventoryManager implements InventoryInterface {
 
     @Override
     public boolean removeObsoleteProducts() {
-        inventory.values().stream()
+        getCurrentInventory().values().stream()
             .filter(Product::isObsolete)
-            .forEach(p -> inventory.remove(p.getId()));
+            .forEach(p -> getCurrentInventory().remove(p.getId()));
         return updateStock();
+    }
+
+    public Product getProduct(String productId) {
+        return getCurrentInventory().get(productId);
     }
 
     // Additional methods for the main success scenario
     public boolean addNewProduct(Product product) {
-        if (inventory.containsKey(product.getId())) {
+        if (getCurrentInventory().containsKey(product.getId())) {
             return false;
         }
         if (headOffice.approveChanges()) {
-            inventory.put(product.getId(), product);
+            getCurrentInventory().put(product.getId(), product);
             return updateStock();
         }
         return false;
     }
 
     public boolean updateProductPrice(String productId, double newPrice) {
-        Product product = inventory.get(productId);
+        Product product = getCurrentInventory().get(productId);
         if (product != null && headOffice.approveChanges()) {
             product.setPrice(newPrice);
             return updateStock();
@@ -73,7 +131,7 @@ public class InventoryManager implements InventoryInterface {
     }
 
     public boolean restockProduct(String productId, int additionalQuantity) {
-        Product product = inventory.get(productId);
+        Product product = getCurrentInventory().get(productId);
         if (product != null) {
             product.setStockLevel(product.getStockLevel() + additionalQuantity);
             return updateStock();
@@ -82,29 +140,10 @@ public class InventoryManager implements InventoryInterface {
     }
 
     // File operations
-    private void loadInventoryFromFile() {
-        try (BufferedReader reader = new BufferedReader(new FileReader(INVENTORY_FILE))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
-                Product product = new Product(
-                    parts[0], // id
-                    parts[1], // name
-                    Double.parseDouble(parts[2]), // price
-                    Integer.parseInt(parts[3]), // stockLevel
-                    parts[4], // supplier
-                    LocalDate.parse(parts[5]) // expirationDate
-                );
-                inventory.put(product.getId(), product);
-            }
-        } catch (IOException e) {
-            System.err.println("Error loading inventory: " + e.getMessage());
-        }
-    }
-
-    private void saveInventoryToFile() {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(INVENTORY_FILE))) {
-            for (Product product : inventory.values()) {
+    private void saveInventoryToFile(String storeId) {
+        String fileName = "./src/main/java/store/data/" + storeId + "_inventory.txt";
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            for (Product product : getCurrentInventory().values()) {
                 writer.write(String.format("%s,%s,%.2f,%d,%s,%s\n",
                     product.getId(),
                     product.getName(),
@@ -117,5 +156,9 @@ public class InventoryManager implements InventoryInterface {
         } catch (IOException e) {
             System.err.println("Error saving inventory: " + e.getMessage());
         }
+    }
+
+    public Map<String, Product> getAllProducts() {
+        return new HashMap<>(getCurrentInventory());
     }
 }
