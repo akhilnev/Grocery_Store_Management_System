@@ -95,72 +95,62 @@ public class ReturnManagementSystem {
             System.out.println("Invalid order ID or order not eligible for return (30-day return policy)");
             return;
         }
-        
-        System.out.print("Enter return ID: ");
-        String returnId = scanner.nextLine();
-        
+
+        String returnId = "RET" + System.currentTimeMillis();
         Return returnOrder = new Return(returnId, orderId, storeId);
-        
-        System.out.println("\nEnter product details for return:");
+
         while (true) {
-            System.out.print("Enter product ID (or 'done' to finish): ");
+            System.out.print("Enter product ID to return (or 'done'): ");
             String input = scanner.nextLine();
-            
-            if (input.equalsIgnoreCase("done")) {
-                break;
-            }
-            
-            Product product = inventoryManager.getProduct(input);
-            if (product == null) {
-                System.out.println("Product not found");
-                continue;
-            }
-            
-            System.out.print("Enter quantity to return: ");
+            if (input.equalsIgnoreCase("done")) break;
+
+            System.out.print("Enter quantity: ");
             int quantity = scanner.nextInt();
             scanner.nextLine(); // Consume newline
-            
-            System.out.print("Is the product damaged? (yes/no): ");
-            boolean isDamaged = scanner.nextLine().equalsIgnoreCase("yes");
-            
-            returnOrder.addItem(product, quantity, isDamaged);
-            
-            // Update inventory only for undamaged items
-            if (!isDamaged) {
-                inventoryManager.restockProduct(product.getId(), quantity);
-                System.out.println("Inventory updated: " + quantity + " units of " + product.getName() + " restocked");
+
+            System.out.print("Is item damaged? (y/n): ");
+            boolean isDamaged = scanner.nextLine().equalsIgnoreCase("y");
+
+            Product product = inventoryManager.getProduct(input);
+            if (product != null) {
+                returnOrder.addItem(product, quantity, isDamaged);
             }
         }
+
+        System.out.println("Select refund method:");
+        System.out.println("1. Cash");
+        System.out.println("2. Card");
+        System.out.println("3. Store Credit");
         
-        returnManager.processReturn(returnOrder);
-        System.out.println("Return processed successfully");
-        saveReturnReport(returnOrder);
-    }
+        int choice = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
 
-    private void saveReturnReport(Return returnOrder) {
-        String fileName = "./src/main/java/store/data/" + storeId + "_returns.txt";
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, true))) {
-            writer.write(String.format("Return ID: %s, Order ID: %s, Date: %s%n", 
-                returnOrder.getReturnId(), returnOrder.getOrderId(), LocalDate.now()));
-            writer.write("Items returned:\n");
-            
-            for (Map.Entry<Product, ReturnItem> entry : returnOrder.getItems().entrySet()) {
-                Product product = entry.getKey();
-                ReturnItem item = entry.getValue();
-                writer.write(String.format("- %s (ID: %s), Quantity: %d, Damaged: %s, Refund Amount: $%.2f%n",
-                    product.getName(),
-                    product.getId(),
-                    item.getQuantity(),
-                    item.isDamaged() ? "Yes" : "No",
-                    item.getRefundAmount()));
+        String refundMethod;
+        switch (choice) {
+            case 1:
+                refundMethod = "CASH";
+                break;
+            case 2:
+                refundMethod = "CARD";
+                break;
+            case 3:
+                refundMethod = "STORE_CREDIT";
+                break;
+            default:
+                refundMethod = null;
+        }
+
+        if (refundMethod != null) {
+            returnOrder.setRefundMethod(refundMethod);
+            if (returnManager.processReturn(returnOrder)) {
+                System.out.println("Return processed successfully");
+                System.out.println("Refund amount: $" + 
+                    String.format("%.2f", returnOrder.getRefundAmount()));
             }
-            writer.write("----------------------------------------\n");
-        } catch (IOException e) {
-            System.err.println("Error saving return report: " + e.getMessage());
         }
     }
 
-    private void viewReturnHistory() {
+        private void viewReturnHistory() {
         System.out.println("\nReturn History:");
         System.out.println("--------------------------------------------------");
         System.out.printf("%-12s %-12s %-10s %-8s %s%n", 
