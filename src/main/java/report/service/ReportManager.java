@@ -8,10 +8,21 @@ import java.util.*;
 import java.io.*;
 import java.io.File;
 
+/**
+ * Service class that manages the generation and storage
+ * of sales reports.
+ *
+ * @author Hrishikesha
+ */
 public class ReportManager {
     private String storeId;
     private InventoryManager inventoryManager;
 
+    /**
+     * Creates a new report manager for a store
+     * @param storeId Store identifier
+     * @param inventoryManager Inventory manager instance
+     */
     public ReportManager(String storeId, InventoryManager inventoryManager) {
         this.storeId = storeId;
         this.inventoryManager = inventoryManager;

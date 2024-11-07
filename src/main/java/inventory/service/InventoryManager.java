@@ -1,3 +1,9 @@
+/**
+ * Service class that manages all inventory-related operations including
+ * stock management, product tracking, and file operations.
+ *
+ * @author Akhilesh Nevatia
+ */
 package inventory.service;
 
 import inventory.interfaces.InventoryInterface;
@@ -9,10 +15,15 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class InventoryManager implements InventoryInterface {
-    private Map<String, Map<String, Product>> storeInventories; // storeId -> (productId -> Product)
+    // Map of store inventories: storeId -> (productId -> Product)
+    private Map<String, Map<String, Product>> storeInventories;
     private HeadOfficeManager headOffice;
     private String currentStoreId;
 
+    /**
+     * Loads store inventory from files and initializes the manager
+     * @param headOffice The head office manager instance for approvals
+     */
     public InventoryManager(HeadOfficeManager headOffice) {
         this.storeInventories = new HashMap<>();
         this.headOffice = headOffice;

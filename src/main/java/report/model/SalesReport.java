@@ -4,6 +4,12 @@ import java.time.LocalDate;
 import java.util.Map;
 import java.util.HashMap;
 
+/**
+ * Model class representing a sales report with revenue
+ * and product sales information.
+ *
+ * @author Hrishikesha
+ */
 public class SalesReport {
     private String storeId;
     private LocalDate startDate;

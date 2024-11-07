@@ -6,11 +6,21 @@ import inventory.service.HeadOfficeManager;
 import java.time.LocalDate;
 import java.util.Scanner;
 
+/**
+ * Main system class that handles the user interface and interaction
+ * for inventory management operations.
+ *
+ * @author Akhilesh Nevatia
+ */
 public class InventoryManagementSystem {
     private InventoryManager inventoryManager;
     private Scanner scanner;
     private String storeId;
 
+    /**
+     * Constructor initializes the system with a specific store ID
+     * @param storeId The unique identifier for the store
+     */
     public InventoryManagementSystem(String storeId) {
         this.storeId = storeId;
         this.inventoryManager = new InventoryManager(new HeadOfficeManager());

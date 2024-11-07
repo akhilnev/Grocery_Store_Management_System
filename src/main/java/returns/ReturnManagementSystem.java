@@ -16,12 +16,26 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
 
+/**
+ * Main system class that handles the user interface and interaction
+ * for processing product returns and refunds.
+ *
+ * @author Hrishikesha
+ */
 public class ReturnManagementSystem {
+    // Manager for handling return operations
     private ReturnManager returnManager;
+    // Manager for inventory operations
     private InventoryManager inventoryManager;
+    // Scanner for user input
     private Scanner scanner;
+    // Store identifier
     private String storeId;
 
+    /**
+     * Constructor initializes the system with a specific store ID
+     * @param storeId The unique identifier for the store
+     */
     public ReturnManagementSystem(String storeId) {
         this.storeId = storeId;
         this.inventoryManager = new InventoryManager(new HeadOfficeManager());

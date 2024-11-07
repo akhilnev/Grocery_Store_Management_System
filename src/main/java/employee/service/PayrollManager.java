@@ -1,5 +1,11 @@
 package employee.service;
 
+/**
+ * Service class that manages all payroll-related operations including
+ * time tracking, overtime approval, and payroll report generation.
+ * @author Akhilesh Nevatia
+ */
+
 import employee.model.Employee;
 import employee.model.TimeRecord;
 import java.time.LocalDate;

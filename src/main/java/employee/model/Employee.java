@@ -4,11 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDateTime;
 
+/**
+ * Model class representing an employee with their basic information
+ * and time tracking functionality.
+ * @author Akhilesh Nevatia
+ */
 public class Employee {
+    // Employee's unique identifier
     private String employeeId;
+    // Employee's full name
     private String name;
+    // Employee's hourly pay rate
     private double hourlyRate;
+    // List of time records for the employee
     private List<TimeRecord> timeRecords;
+    // Current clock-in status
     private boolean clockedIn;
 
     public Employee(String employeeId, String name, double hourlyRate) {

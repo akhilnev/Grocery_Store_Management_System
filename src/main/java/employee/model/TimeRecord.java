@@ -2,6 +2,11 @@ package employee.model;
 
 import java.time.LocalDateTime;
 
+/**
+ * Model class representing a single time record entry for an employee,
+ * including clock-in/out times and break information.
+ * @author Akhilesh Nevatia
+ */
 public class TimeRecord {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
