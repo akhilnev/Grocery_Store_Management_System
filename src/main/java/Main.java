@@ -5,6 +5,10 @@ import store.service.StoreManager;
 import security.service.SecurityManager;
 import assistance.service.CustomerAssistanceManager;
 import java.util.Scanner;
+import supplier.SupplierManagementSystem;
+import report.SalesReportSystem;
+import returns.ReturnManagementSystem;
+import employee.PayrollSystem;
 
 public class Main {
     private static StoreManager storeManager = new StoreManager();
@@ -21,9 +25,11 @@ public class Main {
             System.out.println("\nGrocery Store Management System");
             System.out.println("1. Inventory Management (Store Manager)");
             System.out.println("2. Order Management (Store Cashier)");
-            System.out.println("3. Customer Assistance (Service Associate)");
-            System.out.println("4. Security Management (Security Officer)");
-            System.out.println("5. Exit");
+            System.out.println("3. Supplier Management (Store Employee)");
+            System.out.println("4. Sales Report (Store Manager)");
+            System.out.println("5. Returns and Refunds (Store Manager)");
+            System.out.println("6. Employee Payroll (Store Manager)");
+            System.out.println("7. Exit");
             System.out.print("Choose a use case: ");
 
             int choice = scanner.nextInt();
@@ -37,12 +43,18 @@ public class Main {
                     new OrderManagementSystem(storeId).start();
                     break;
                 case 3:
-                    new CustomerAssistanceManager(storeId).startAssistance();
+                    new SupplierManagementSystem(storeId).start();
                     break;
                 case 4:
-                    new SecurityManager().startMonitoring();
+                    new SalesReportSystem(storeId).start();
                     break;
                 case 5:
+                    new ReturnManagementSystem(storeId).start();
+                    break;
+                case 6:
+                    new PayrollSystem(storeId).start();
+                    break;
+                case 7:
                     System.out.println("Exiting...");
                     return;
                 default:
