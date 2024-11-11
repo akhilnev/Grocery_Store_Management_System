@@ -17,11 +17,15 @@ public class Main {
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
+        String storeId = null;
+        
         while (true) {
-            String storeId = selectStore();
             if (storeId == null) {
-                System.out.println("Exiting...");
-                break;
+                storeId = selectStore();
+                if (storeId == null) {
+                    System.out.println("Exiting...");
+                    break;
+                }
             }
 
             System.out.println("\nGrocery Store Management System");
@@ -35,7 +39,8 @@ public class Main {
             System.out.println("8. Customer Assistance (Service Associate)");
             System.out.println("9. Security Management (Security Officer)");
             System.out.println("10. Marketing Management (Marketing Manager)");
-            System.out.println("11. Exit");
+            System.out.println("11. Change Store");
+            System.out.println("12. Exit");
             System.out.print("Choose a use case: ");
 
             int choice = scanner.nextInt();
@@ -73,6 +78,9 @@ public class Main {
                     new MarketingManager().start();
                     break;
                 case 11:
+                    storeId = null; // This will trigger store selection in next loop
+                    break;
+                case 12:
                     System.out.println("Exiting...");
                     return;
                 default:

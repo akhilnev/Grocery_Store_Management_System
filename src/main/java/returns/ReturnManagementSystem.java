@@ -55,8 +55,8 @@ public class ReturnManagementSystem {
             System.out.println("2. View Return History");
             System.out.println("3. Approve Pending Returns");
             System.out.println("4. Update Inventory for Returns");
-            System.out.println("5. Return to Main Menu");
-            System.out.println("6. Generate Returns Analytics Report");
+            System.out.println("5. Generate Returns Analytics Report");
+            System.out.println("6. Return to Main Menu");
             System.out.print("Choose an option: ");
 
             int choice = scanner.nextInt();
@@ -76,10 +76,10 @@ public class ReturnManagementSystem {
                     updateInventoryForReturns();
                     break;
                 case 5:
-                    return;
-                case 6:
                     analyticsService.generateAnalyticsReport();
                     break;
+                case 6:
+                    return;
                 default:
                     System.out.println("Invalid option");
             }
