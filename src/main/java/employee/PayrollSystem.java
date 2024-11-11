@@ -42,17 +42,17 @@ public class PayrollSystem {
     public void start() {
         while (true) {
             System.out.println("\nPayroll System");
-            System.out.println("1. Clock In");
-            System.out.println("2. Clock Out");
-            System.out.println("3. Start Break");
-            System.out.println("4. End Break");
-            System.out.println("5. View Time Records");
-            System.out.println("6. Approve Overtime");
-            System.out.println("7. Generate Payroll Report");
-            System.out.println("8. Enter Custom Hours");
-            System.out.println("9. Request Leave");
-            System.out.println("10. Approve Leave Requests");
-            System.out.println("11. View Leave Balance");
+            System.out.println("1. Clock In (Employee)");
+            System.out.println("2. Clock Out (Employee)");
+            System.out.println("3. Start Break (Employee)");
+            System.out.println("4. End Break (Employee)");
+            System.out.println("5. Enter Custom Hours (Employee)");
+            System.out.println("6. Request Leave (Employee)");
+            System.out.println("7. View Leave Balance (Employee)");
+            System.out.println("8. Approve Leave Requests (Manager)");
+            System.out.println("9. View Time Records (Manager)");
+            System.out.println("10. Approve Overtime (Manager)");
+            System.out.println("11. Generate Payroll Report (Manager)");
             System.out.println("12. Return to Main Menu");
             System.out.print("Choose an option: ");
 
@@ -73,25 +73,25 @@ public class PayrollSystem {
                     endBreak();
                     break;
                 case 5:
-                    viewTimeRecords();
-                    break;
-                case 6:
-                    approveOvertime();
-                    break;
-                case 7:
-                    generatePayrollReport();
-                    break;
-                case 8:
                     enterCustomHours();
                     break;
-                case 9:
+                case 6:
                     requestLeave();
                     break;
-                case 10:
+                case 7:
+                    viewLeaveBalance();
+                    break;
+                case 8:
                     approveLeaveRequests();
                     break;
+                case 9:
+                    viewTimeRecords();
+                    break;
+                case 10:
+                    approveOvertime();
+                    break;
                 case 11:
-                    viewLeaveBalance();
+                    generatePayrollReport();
                     break;
                 case 12:
                     return;
@@ -143,60 +143,6 @@ public class PayrollSystem {
         } else {
             System.out.println("Failed to end break. Employee may not be on break or ID invalid");
         }
-    }
-
-    private void viewTimeRecords() {
-        System.out.print("Enter employee ID: ");
-        String employeeId = scanner.nextLine();
-        System.out.print("Enter date (yyyy-MM-dd): ");
-        String dateStr = scanner.nextLine();
-        
-        LocalDate date = LocalDate.parse(dateStr, DateTimeFormatter.ISO_LOCAL_DATE);
-        payrollManager.displayTimeRecords(employeeId, date);
-    }
-
-    private void approveOvertime() {
-        payrollManager.displayPendingOvertimeRequests();
-        
-        System.out.print("\nEnter employee ID to approve (or press Enter to cancel): ");
-        String employeeId = scanner.nextLine().trim();
-        
-        if (employeeId.isEmpty()) {
-            System.out.println("Approval cancelled");
-            return;
-        }
-        
-        System.out.print("Enter date (yyyy-MM-dd): ");
-        String dateStr = scanner.nextLine();
-        
-        try {
-            LocalDate date = LocalDate.parse(dateStr, DateTimeFormatter.ISO_LOCAL_DATE);
-            if (payrollManager.approveOvertime(employeeId, date)) {
-                System.out.println("Overtime approved successfully");
-            } else {
-                System.out.println("Failed to approve overtime. Check employee ID and date");
-            }
-        } catch (Exception e) {
-            System.out.println("Invalid date format. Please use yyyy-MM-dd");
-        }
-    }
-
-    private void generatePayrollReport() {
-        System.out.print("Enter start date (yyyy-MM-dd): ");
-        String startDateStr = scanner.nextLine();
-        System.out.print("Enter end date (yyyy-MM-dd): ");
-        String endDateStr = scanner.nextLine();
-        
-        LocalDate startDate = LocalDate.parse(startDateStr, DateTimeFormatter.ISO_LOCAL_DATE);
-        LocalDate endDate = LocalDate.parse(endDateStr, DateTimeFormatter.ISO_LOCAL_DATE);
-        
-        if (endDate.isBefore(startDate)) {
-            System.out.println("End date cannot be before start date");
-            return;
-        }
-
-        double totalPayout = payrollManager.generatePayrollReport(startDate, endDate);
-        System.out.printf("Payroll report generated. Total payout: $%.2f%n", totalPayout);
     }
 
     private void enterCustomHours() {
@@ -271,6 +217,74 @@ public class PayrollSystem {
         }
     }
 
+    private void viewLeaveBalance() {
+        System.out.print("Enter employee ID: ");
+        String employeeId = scanner.nextLine();
+        
+        Map<LeaveType, Integer> balance = leaveManager.getLeaveBalance(employeeId);
+        
+        System.out.println("\nLeave Balance");
+        System.out.println("--------------------------------------------------");
+        for (Map.Entry<LeaveType, Integer> entry : balance.entrySet()) {
+            System.out.printf("%s: %d days%n", entry.getKey(), entry.getValue());
+        }
+        System.out.println("--------------------------------------------------");
+    }
+
+    private void viewTimeRecords() {
+        System.out.print("Enter employee ID: ");
+        String employeeId = scanner.nextLine();
+        System.out.print("Enter date (yyyy-MM-dd): ");
+        String dateStr = scanner.nextLine();
+        
+        LocalDate date = LocalDate.parse(dateStr, DateTimeFormatter.ISO_LOCAL_DATE);
+        payrollManager.displayTimeRecords(employeeId, date);
+    }
+
+    private void approveOvertime() {
+        payrollManager.displayPendingOvertimeRequests();
+        
+        System.out.print("\nEnter employee ID to approve (or press Enter to cancel): ");
+        String employeeId = scanner.nextLine().trim();
+        
+        if (employeeId.isEmpty()) {
+            System.out.println("Approval cancelled");
+            return;
+        }
+        
+        System.out.print("Enter date (yyyy-MM-dd): ");
+        String dateStr = scanner.nextLine();
+        
+        try {
+            LocalDate date = LocalDate.parse(dateStr, DateTimeFormatter.ISO_LOCAL_DATE);
+            if (payrollManager.approveOvertime(employeeId, date)) {
+                System.out.println("Overtime approved successfully");
+            } else {
+                System.out.println("Failed to approve overtime. Check employee ID and date");
+            }
+        } catch (Exception e) {
+            System.out.println("Invalid date format. Please use yyyy-MM-dd");
+        }
+    }
+
+    private void generatePayrollReport() {
+        System.out.print("Enter start date (yyyy-MM-dd): ");
+        String startDateStr = scanner.nextLine();
+        System.out.print("Enter end date (yyyy-MM-dd): ");
+        String endDateStr = scanner.nextLine();
+        
+        LocalDate startDate = LocalDate.parse(startDateStr, DateTimeFormatter.ISO_LOCAL_DATE);
+        LocalDate endDate = LocalDate.parse(endDateStr, DateTimeFormatter.ISO_LOCAL_DATE);
+        
+        if (endDate.isBefore(startDate)) {
+            System.out.println("End date cannot be before start date");
+            return;
+        }
+
+        double totalPayout = payrollManager.generatePayrollReport(startDate, endDate);
+        System.out.printf("Payroll report generated. Total payout: $%.2f%n", totalPayout);
+    }
+
     private void approveLeaveRequests() {
         System.out.println("\nPending Leave Requests");
         System.out.println("--------------------------------------------------");
@@ -298,19 +312,5 @@ public class PayrollSystem {
             }
             System.out.println("--------------------------------------------------");
         }
-    }
-
-    private void viewLeaveBalance() {
-        System.out.print("Enter employee ID: ");
-        String employeeId = scanner.nextLine();
-        
-        Map<LeaveType, Integer> balance = leaveManager.getLeaveBalance(employeeId);
-        
-        System.out.println("\nLeave Balance");
-        System.out.println("--------------------------------------------------");
-        for (Map.Entry<LeaveType, Integer> entry : balance.entrySet()) {
-            System.out.printf("%s: %d days%n", entry.getKey(), entry.getValue());
-        }
-        System.out.println("--------------------------------------------------");
     }
 }
