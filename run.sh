@@ -1,46 +1,37 @@
 #!/bin/bash
 
-echo "Cleaning old class files..."
-cd src/main/java
-find . -name "*.class" -type f -delete
+# Create output directory if it doesn't exist
+mkdir -p out
 
-echo "Compiling Java files..."
-javac -d . Main.java \
-    assistance/model/AssistanceRequest.java \
-    assistance/service/CustomerAssistanceManager.java \
-    employee/PayrollSystem.java \
-    inventory/interfaces/InventoryInterface.java \
-    inventory/interfaces/HeadOfficeInterface.java \
-    inventory/model/Product.java \
-    inventory/service/InventoryManager.java \
-    inventory/service/HeadOfficeManager.java \
-    inventory/InventoryManagementSystem.java \
-    maintenance/MaintenanceSystem.java \
-    marketing/service/MarketingManager.java \
-    order/model/Order.java \
-    order/OrderManagementSystem.java \
-    report/SalesReportSystem.java \
-    returns/model/Return.java \
-    returns/model/ReturnItem.java \
-    returns/service/ReturnManager.java \
-    returns/ReturnManagementSystem.java \
-    security/model/SecurityAlertSystem.java \
-    security/model/SecurityIncident.java \
-    security/service/SecurityManager.java \
-    store/model/Store.java \
-    store/service/StoreManager.java \
-    supplier/model/Shipment.java \
-    supplier/service/SupplierManager.java \
-    supplier/SupplierManagementSystem.java
+# Compile all Java files
+javac -d out src/main/java/inventory/model/*.java \
+    src/main/java/inventory/service/*.java \
+    src/main/java/inventory/interfaces/*.java \
+    src/main/java/order/model/*.java \
+    src/main/java/store/model/*.java \
+    src/main/java/store/service/*.java \
+    src/main/java/supplier/model/*.java \
+    src/main/java/supplier/service/*.java \
+    src/main/java/returns/model/*.java \
+    src/main/java/returns/service/*.java \
+    src/main/java/report/model/*.java \
+    src/main/java/report/service/*.java \
+    src/main/java/report/*.java \
+    src/main/java/inventory/*.java \
+    src/main/java/order/*.java \
+    src/main/java/supplier/*.java \
+    src/main/java/returns/*.java \
+    src/main/java/employee/model/*.java \
+    src/main/java/employee/service/*.java \
+    src/main/java/employee/*.java \
+    src/main/java/maintenance/model/*.java \
+    src/main/java/maintenance/service/*.java \
+    src/main/java/maintenance/*.java \
+    src/main/java/Main.java
 
+# Run the program if compilation was successful
 if [ $? -eq 0 ]; then
-    echo "Compilation successful!"
-    echo "Running the program..."
-    java Main
+    java -cp out Main
 else
-    echo "Compilation failed!"
-    exit 1
-fi
-
-cd ../../..
-echo "Program execution completed."
+    echo "Compilation failed"
+fi 
