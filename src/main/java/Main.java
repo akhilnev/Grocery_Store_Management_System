@@ -2,11 +2,15 @@ import inventory.InventoryManagementSystem;
 import order.OrderManagementSystem;
 import store.model.Store;
 import store.service.StoreManager;
+import security.service.SecurityManager;
+import assistance.service.CustomerAssistanceManager;
+import marketing.service.MarketingManager;
 import java.util.Scanner;
 import supplier.SupplierManagementSystem;
 import report.SalesReportSystem;
 import returns.ReturnManagementSystem;
 import employee.PayrollSystem;
+import maintenance.MaintenanceSystem;
 
 public class Main {
     private static StoreManager storeManager = new StoreManager();
@@ -23,11 +27,15 @@ public class Main {
             System.out.println("\nGrocery Store Management System");
             System.out.println("1. Inventory Management (Store Manager)");
             System.out.println("2. Order Management (Store Cashier)");
-            System.out.println("3. Supplier Management (Store Employee)");
+            System.out.println("3. Supplier Management (Store Manager)");
             System.out.println("4. Sales Report (Store Manager)");
             System.out.println("5. Returns and Refunds (Store Manager)");
             System.out.println("6. Employee Payroll (Store Manager)");
-            System.out.println("7. Exit");
+            System.out.println("7. Store Cleaning and Maintenance");
+            System.out.println("8. Customer Assistance (Service Associate)");
+            System.out.println("9. Security Management (Security Officer)");
+            System.out.println("10. Marketing Management (Marketing Manager)");
+            System.out.println("11. Exit");
             System.out.print("Choose a use case: ");
 
             int choice = scanner.nextInt();
@@ -53,6 +61,18 @@ public class Main {
                     new PayrollSystem(storeId).start();
                     break;
                 case 7:
+                    new MaintenanceSystem(storeId).start();
+                    break;    
+                case 8:
+                    new CustomerAssistanceManager(storeId).startAssistance();
+                    break;
+                case 9:
+                    new SecurityManager().startMonitoring();
+                    break;
+                case 10:
+                    new MarketingManager().start();
+                    break;
+                case 11:
                     System.out.println("Exiting...");
                     return;
                 default:

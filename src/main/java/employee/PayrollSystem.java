@@ -2,15 +2,21 @@
  * Main PayrollSystem class that handles the user interface and interaction
  * for employee time tracking and payroll management.
  *
- * @author Akhilesh Nevatia
+ * @author Hrishikesha Kyathsandra
  */
 package employee;
 
 import employee.model.Employee;
 import employee.service.PayrollManager;
+import employee.service.LeaveManager;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
+import java.util.List;
+import java.util.Map;
+import employee.model.LeaveType;
+import employee.model.LeaveStatus;
+import employee.model.Leave;
 
 public class PayrollSystem {
     // Manager instance to handle payroll operations
@@ -19,6 +25,8 @@ public class PayrollSystem {
     private Scanner scanner;
     // Store identifier
     private String storeId;
+    // Leave manager instance
+    private LeaveManager leaveManager;
 
     /**
      * Constructor initializes the PayrollSystem with a specific store ID
@@ -28,6 +36,7 @@ public class PayrollSystem {
         this.storeId = storeId;
         this.payrollManager = new PayrollManager(storeId);
         this.scanner = new Scanner(System.in);
+        this.leaveManager = new LeaveManager(storeId);
     }
 
     public void start() {
@@ -41,7 +50,10 @@ public class PayrollSystem {
             System.out.println("6. Approve Overtime");
             System.out.println("7. Generate Payroll Report");
             System.out.println("8. Enter Custom Hours");
-            System.out.println("9. Return to Main Menu");
+            System.out.println("9. Request Leave");
+            System.out.println("10. Approve Leave Requests");
+            System.out.println("11. View Leave Balance");
+            System.out.println("12. Return to Main Menu");
             System.out.print("Choose an option: ");
 
             int choice = scanner.nextInt();
@@ -73,6 +85,15 @@ public class PayrollSystem {
                     enterCustomHours();
                     break;
                 case 9:
+                    requestLeave();
+                    break;
+                case 10:
+                    approveLeaveRequests();
+                    break;
+                case 11:
+                    viewLeaveBalance();
+                    break;
+                case 12:
                     return;
                 default:
                     System.out.println("Invalid option");
@@ -197,5 +218,99 @@ public class PayrollSystem {
         scanner.nextLine(); // Consume newline
         
         payrollManager.addCustomTimeRecord(employeeId, date, startTimeStr, endTimeStr, breakMinutes);
+    }
+
+    private void requestLeave() {
+        System.out.print("Enter employee ID: ");
+        String employeeId = scanner.nextLine();
+        
+        System.out.println("Leave types:");
+        System.out.println("1. Vacation");
+        System.out.println("2. Sick");
+        System.out.println("3. Personal");
+        System.out.println("4. Emergency");
+        System.out.print("Choose leave type (1-4): ");
+        
+        LeaveType type;
+        String choice = scanner.nextLine();
+        switch (choice) {
+            case "1":
+                type = LeaveType.VACATION;
+                break;
+            case "2":
+                type = LeaveType.SICK;
+                break;
+            case "3":
+                type = LeaveType.PERSONAL;
+                break;
+            case "4":
+                type = LeaveType.EMERGENCY;
+                break;
+            default:
+                type = null;
+        }
+        
+        if (type == null) {
+            System.out.println("Invalid leave type");
+            return;
+        }
+
+        System.out.print("Enter start date (yyyy-MM-dd): ");
+        LocalDate startDate = LocalDate.parse(scanner.nextLine());
+        
+        System.out.print("Enter end date (yyyy-MM-dd): ");
+        LocalDate endDate = LocalDate.parse(scanner.nextLine());
+        
+        System.out.print("Enter reason: ");
+        String reason = scanner.nextLine();
+        
+        if (leaveManager.requestLeave(employeeId, startDate, endDate, type, reason)) {
+            System.out.println("Leave request submitted successfully");
+        } else {
+            System.out.println("Failed to submit leave request. Check leave balance.");
+        }
+    }
+
+    private void approveLeaveRequests() {
+        System.out.println("\nPending Leave Requests");
+        System.out.println("--------------------------------------------------");
+        
+        List<Leave> pendingLeaves = leaveManager.getPendingLeaves();
+        if (pendingLeaves.isEmpty()) {
+            System.out.println("No pending leave requests");
+            return;
+        }
+
+        for (Leave leave : pendingLeaves) {
+            System.out.printf("Employee ID: %s%n", leave.getEmployeeId());
+            System.out.printf("Type: %s%n", leave.getType());
+            System.out.printf("Period: %s to %s%n", leave.getStartDate(), leave.getEndDate());
+            System.out.printf("Reason: %s%n", leave.getReason());
+            System.out.print("Approve? (yes/no): ");
+            
+            String response = scanner.nextLine().trim().toLowerCase();
+            if (response.equals("yes")) {
+                leaveManager.approveLeave(leave.getEmployeeId(), leave.getStartDate());
+                System.out.println("Leave approved");
+            } else {
+                leaveManager.rejectLeave(leave.getEmployeeId(), leave.getStartDate());
+                System.out.println("Leave rejected");
+            }
+            System.out.println("--------------------------------------------------");
+        }
+    }
+
+    private void viewLeaveBalance() {
+        System.out.print("Enter employee ID: ");
+        String employeeId = scanner.nextLine();
+        
+        Map<LeaveType, Integer> balance = leaveManager.getLeaveBalance(employeeId);
+        
+        System.out.println("\nLeave Balance");
+        System.out.println("--------------------------------------------------");
+        for (Map.Entry<LeaveType, Integer> entry : balance.entrySet()) {
+            System.out.printf("%s: %d days%n", entry.getKey(), entry.getValue());
+        }
+        System.out.println("--------------------------------------------------");
     }
 }

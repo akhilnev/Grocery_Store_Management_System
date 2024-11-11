@@ -3,6 +3,7 @@ package returns;
 import returns.model.Return;
 import returns.model.ReturnItem;
 import returns.service.ReturnManager;
+import returns.service.ReturnAnalyticsService;
 import inventory.service.InventoryManager;
 import inventory.service.HeadOfficeManager;
 import inventory.model.Product;
@@ -31,6 +32,8 @@ public class ReturnManagementSystem {
     private Scanner scanner;
     // Store identifier
     private String storeId;
+    // Analytics service for generating reports
+    private ReturnAnalyticsService analyticsService;
 
     /**
      * Constructor initializes the system with a specific store ID
@@ -41,6 +44,7 @@ public class ReturnManagementSystem {
         this.inventoryManager = new InventoryManager(new HeadOfficeManager());
         this.inventoryManager.setCurrentStore(storeId);
         this.returnManager = new ReturnManager(storeId, inventoryManager);
+        this.analyticsService = new ReturnAnalyticsService(returnManager, storeId);
         this.scanner = new Scanner(System.in);
     }
 
@@ -52,6 +56,7 @@ public class ReturnManagementSystem {
             System.out.println("3. Approve Pending Returns");
             System.out.println("4. Update Inventory for Returns");
             System.out.println("5. Return to Main Menu");
+            System.out.println("6. Generate Returns Analytics Report");
             System.out.print("Choose an option: ");
 
             int choice = scanner.nextInt();
@@ -72,6 +77,9 @@ public class ReturnManagementSystem {
                     break;
                 case 5:
                     return;
+                case 6:
+                    analyticsService.generateAnalyticsReport();
+                    break;
                 default:
                     System.out.println("Invalid option");
             }
