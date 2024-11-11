@@ -39,7 +39,7 @@ public class InventoryManager implements InventoryInterface {
 
     private void loadStoresAndInventory() {
         // Load from stores.txt and their respective inventory files
-        try (BufferedReader reader = new BufferedReader(new FileReader("./src/main/java/store/data/stores.txt"))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("src/main/java/store/data/stores.txt"))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
@@ -52,7 +52,7 @@ public class InventoryManager implements InventoryInterface {
     }
 
     private void loadStoreInventory(String storeId) {
-        String fileName = "./src/main/java/store/data/" + storeId + "_inventory.txt";
+        String fileName = "src/main/java/store/data/" + storeId + "_inventory.txt";
         Map<String, Product> storeInventory = new HashMap<>();
         
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
@@ -152,7 +152,7 @@ public class InventoryManager implements InventoryInterface {
 
     // File operations
     private void saveInventoryToFile(String storeId) {
-        String fileName = "./src/main/java/store/data/" + storeId + "_inventory.txt";
+        String fileName = "src/main/java/store/data/" + storeId + "_inventory.txt";
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             for (Product product : getCurrentInventory().values()) {
                 writer.write(String.format("%s,%s,%.2f,%d,%s,%s\n",

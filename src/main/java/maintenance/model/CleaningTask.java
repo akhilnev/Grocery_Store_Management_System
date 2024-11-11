@@ -1,17 +1,23 @@
+/**
+ * Represents a cleaning task in the system.
+ * Manages scheduled cleaning activities and their completion status.
+ *
+ * @author Chandrashekar Tirunagiri
+ */
 package maintenance.model;
 
 import java.time.LocalDateTime;
 
 public class CleaningTask {
-    private String taskId;
-    private String description;
-    private String area;
-    private String assignedTo;
-    private TaskStatus status;
-    private TaskFrequency frequency;
-    private LocalDateTime scheduledTime;
-    private LocalDateTime completedTime;
-    private String notes;
+    private String taskId; // Unique identifier for the task
+    private String description; // Description of the cleaning task
+    private String area; // Area where the task is to be performed
+    private String assignedTo; // Staff assigned to the task
+    private TaskStatus status; // Current status of the task
+    private TaskFrequency frequency; // Frequency of the task (DAILY, WEEKLY, MONTHLY)
+    private LocalDateTime scheduledTime; // Scheduled time for the task
+    private LocalDateTime completedTime; // Time when the task was completed
+    private String notes; // Additional notes about the task
 
     public CleaningTask(String taskId, String description, String area, 
                        TaskFrequency frequency, LocalDateTime scheduledTime) {
@@ -20,7 +26,7 @@ public class CleaningTask {
         this.area = area;
         this.frequency = frequency;
         this.scheduledTime = scheduledTime;
-        this.status = TaskStatus.PENDING;
+        this.status = TaskStatus.PENDING; // Set initial status to PENDING
     }
 
     // Getters and setters
