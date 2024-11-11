@@ -35,7 +35,7 @@ public class Main {
             System.out.println("4. Sales Report (Store Manager)");
             System.out.println("5. Returns and Refunds (Store Manager)");
             System.out.println("6. Employee Payroll (Store Manager)");
-            System.out.println("7. Store Cleaning and Maintenance");
+            System.out.println("7. Store Cleaning and Maintenance (Store Manager)");
             System.out.println("8. Customer Assistance (Service Associate)");
             System.out.println("9. Security Management (Security Officer)");
             System.out.println("10. Marketing Management (Marketing Manager)");
