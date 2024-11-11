@@ -9,7 +9,7 @@ Hours Worked: 0.00
 Total Pay: $0.00
 
 Employee: Bob Wilson (EMP003)
-Hours Worked: 7.50
-Total Pay: $150.00
+Hours Worked: 0.00
+Total Pay: $0.00
 
-Total Payroll: $232.50
+Total Payroll: $82.50
