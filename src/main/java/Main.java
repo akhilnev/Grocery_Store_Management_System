@@ -31,10 +31,10 @@ public class Main {
             System.out.println("\nGrocery Store Management System");
             System.out.println("1. Inventory Management (Store Manager)");
             System.out.println("2. Order Management (Store Cashier)");
-            System.out.println("3. Supplier Management (Store Manager)");
+            System.out.println("3. Supplier Management (Store Employee)");
             System.out.println("4. Sales Report (Store Manager)");
-            System.out.println("5. Returns and Refunds (Store Manager)");
-            System.out.println("6. Employee Payroll (Store Manager)");
+            System.out.println("5. Returns and Refunds (Store Cashier)");
+            System.out.println("6. Employee Payroll (HR Manager)");
             System.out.println("7. Store Cleaning and Maintenance (Store Manager)");
             System.out.println("8. Customer Assistance (Service Associate)");
             System.out.println("9. Security Management (Security Officer)");
