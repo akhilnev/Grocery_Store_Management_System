@@ -13,6 +13,7 @@ public class Promotion {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private String status;     // ACTIVE, COMPLETED
+    private String objective; 
 
     public Promotion(String name, String type, double discount, 
                     LocalDateTime startDate, LocalDateTime endDate) {
@@ -39,4 +40,16 @@ public class Promotion {
     public LocalDateTime getStartDate() { return startDate; }
     public LocalDateTime getEndDate() { return endDate; }
     public void setEndDate(LocalDateTime endDate) { this.endDate = endDate; }
+    public String getObjective() { return objective; }
+    public void setObjective(String objective) { this.objective = objective; }
+
+
+    public Set<String> getTargetProducts() { 
+        return targetProducts; 
+    }
+
+    public void addTargetProducts(Set<String> products) {
+        this.targetProducts.addAll(products);
+    }
+
 }
