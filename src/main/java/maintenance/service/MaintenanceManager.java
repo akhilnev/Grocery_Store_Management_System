@@ -4,6 +4,7 @@ import maintenance.model.*;
 import java.time.*;
 import java.util.*;
 import java.io.*;
+import java.time.format.DateTimeFormatter;
 
 public class MaintenanceManager {
     private String storeId;
@@ -245,70 +246,155 @@ public class MaintenanceManager {
     }
 
     public void reportMaintenanceIssue(String description, String area, TaskPriority priority) {
+        String taskId = "MNT" + String.format("%03d", maintenanceTasks.size() + 1);
         MaintenanceTask task = new MaintenanceTask(
-            "MNT" + String.format("%03d", maintenanceTasks.size() + 1),
+            taskId,
             description,
             area,
             priority,
             LocalDateTime.now()
         );
-        maintenanceTasks.put(task.getTaskId(), task);
-        saveMaintenanceTasks();
+        task.setStatus(TaskStatus.PENDING);  // Explicitly set initial status
+        maintenanceTasks.put(taskId, task);
+        System.out.println("Maintenance issue reported with ID: " + taskId);
     }
-
+    
     public void assignMaintenanceTask(String taskId, String technicianId) {
         MaintenanceTask task = maintenanceTasks.get(taskId);
-        if (task != null) {
+        if (task != null && task.getStatus() != TaskStatus.COMPLETED) {
             task.setAssignedTo(technicianId);
-            task.setStatus(TaskStatus.IN_PROGRESS);
-            saveMaintenanceTasks();
+            task.setStatus(TaskStatus.IN_PROGRESS);  // Change status to IN_PROGRESS when assigned
+            System.out.println("Maintenance task " + taskId + " assigned to " + technicianId);
+        } else {
+            System.out.println("Task not found or already completed");
         }
     }
 
     public void completeMaintenanceTask(String taskId, String notes) {
         MaintenanceTask task = maintenanceTasks.get(taskId);
-        if (task != null) {
-            task.setStatus(TaskStatus.COMPLETED);
+        if (task != null && task.getStatus() != TaskStatus.COMPLETED) {
+            task.setStatus(TaskStatus.COMPLETED);  // Change status to COMPLETED
             task.setCompletedTime(LocalDateTime.now());
             task.setNotes(notes);
-            saveMaintenanceTasks();
+            System.out.println("Maintenance task " + taskId + " marked as completed");
+        } else {
+            System.out.println("Task not found or already completed");
         }
     }
-
+    
     public void generateMaintenanceReport(LocalDate startDate, LocalDate endDate) {
-        String fileName = DATA_DIR + storeId + "_maintenance_report_" + startDate + "_to_" + endDate + ".txt";
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
-            writer.write("Maintenance Report: " + startDate + " to " + endDate + "\n");
-            writer.write("----------------------------------------\n\n");
+        System.out.println("\n==========================================");
+        System.out.println("MAINTENANCE REPORT");
+        System.out.println("Date Range: " + startDate + " to " + endDate);
+        System.out.println("==========================================\n");
+    
+        boolean tasksFound = false;
+        
+        // Display Completed Tasks
+        System.out.println("COMPLETED TASKS:");
+        System.out.println("---------------");
+        System.out.printf("%-10s %-30s %-15s %-15s %-15s%n", 
+            "ID", "Description", "Type", "Completed By", "Status");
             
-            writer.write("Cleaning Tasks:\n");
-            for (CleaningTask task : cleaningTasks.values()) {
-                if (isWithinDateRange(task.getScheduledTime(), startDate, endDate)) {
-                    writer.write(String.format("%s - %s - %s - %s%n",
-                        task.getTaskId(),
-                        task.getDescription(),
-                        task.getStatus(),
-                        task.getNotes() != null ? task.getNotes() : "No notes"));
-                }
+        for (CleaningTask task : cleaningTasks.values()) {
+            if (task.getStatus() == TaskStatus.COMPLETED && 
+                isWithinDateRange(task.getCompletedTime(), startDate, endDate)) {
+                System.out.printf("%-10s %-30s %-15s %-15s %-15s%n",
+                    task.getTaskId(),
+                    task.getDescription(),
+                    task.getFrequency(),
+                    task.getAssignedTo(),
+                    task.getStatus());
+                tasksFound = true;
             }
-            
-            writer.write("\nMaintenance Tasks:\n");
-            for (MaintenanceTask task : maintenanceTasks.values()) {
-                if (isWithinDateRange(task.getReportedTime(), startDate, endDate)) {
-                    writer.write(String.format("%s - %s - %s - Priority: %s - %s%n",
-                        task.getTaskId(),
-                        task.getDescription(),
-                        task.getStatus(),
-                        task.getPriority(),
-                        task.getNotes() != null ? task.getNotes() : "No notes"));
-                }
-            }
-        } catch (IOException e) {
-            System.err.println("Error generating maintenance report: " + e.getMessage());
         }
+        
+        for (MaintenanceTask task : maintenanceTasks.values()) {
+            if (task.getStatus() == TaskStatus.COMPLETED && 
+                isWithinDateRange(task.getCompletedTime(), startDate, endDate)) {
+                System.out.printf("%-10s %-30s %-15s %-15s %-15s%n",
+                    task.getTaskId(),
+                    task.getDescription(),
+                    task.getPriority(),
+                    task.getAssignedTo(),
+                    task.getStatus());
+                tasksFound = true;
+            }
+        }
+        
+        // Display In-Progress Tasks
+        System.out.println("\nIN-PROGRESS TASKS:");
+        System.out.println("-----------------");
+        System.out.printf("%-10s %-30s %-15s %-15s %-15s%n", 
+            "ID", "Description", "Type", "Assigned To", "Status");
+            
+        for (CleaningTask task : cleaningTasks.values()) {
+            if (task.getStatus() == TaskStatus.IN_PROGRESS && 
+                isWithinDateRange(task.getScheduledTime(), startDate, endDate)) {
+                System.out.printf("%-10s %-30s %-15s %-15s %-15s%n",
+                    task.getTaskId(),
+                    task.getDescription(),
+                    task.getFrequency(),
+                    task.getAssignedTo(),
+                    task.getStatus());
+                tasksFound = true;
+            }
+        }
+        
+        for (MaintenanceTask task : maintenanceTasks.values()) {
+            if (task.getStatus() == TaskStatus.IN_PROGRESS && 
+                isWithinDateRange(task.getReportedTime(), startDate, endDate)) {
+                System.out.printf("%-10s %-30s %-15s %-15s %-15s%n",
+                    task.getTaskId(),
+                    task.getDescription(),
+                    task.getPriority(),
+                    task.getAssignedTo(),
+                    task.getStatus());
+                tasksFound = true;
+            }
+        }
+        
+        // Display Pending Tasks
+        System.out.println("\nPENDING TASKS:");
+        System.out.println("--------------");
+        System.out.printf("%-10s %-30s %-15s %-15s %-15s%n", 
+            "ID", "Description", "Type", "Assigned To", "Status");
+            
+        for (CleaningTask task : cleaningTasks.values()) {
+            if (task.getStatus() == TaskStatus.PENDING && 
+                isWithinDateRange(task.getScheduledTime(), startDate, endDate)) {
+                System.out.printf("%-10s %-30s %-15s %-15s %-15s%n",
+                    task.getTaskId(),
+                    task.getDescription(),
+                    task.getFrequency(),
+                    "Unassigned",
+                    task.getStatus());
+                tasksFound = true;
+            }
+        }
+        
+        for (MaintenanceTask task : maintenanceTasks.values()) {
+            if (task.getStatus() == TaskStatus.PENDING && 
+                isWithinDateRange(task.getReportedTime(), startDate, endDate)) {
+                System.out.printf("%-10s %-30s %-15s %-15s %-15s%n",
+                    task.getTaskId(),
+                    task.getDescription(),
+                    task.getPriority(),
+                    "Unassigned",
+                    task.getStatus());
+                tasksFound = true;
+            }
+        }
+    
+        if (!tasksFound) {
+            System.out.println("\nNo tasks found for the specified date range.");
+        }
+    
+        System.out.println("\n==========================================\n");
     }
-
+    
     private boolean isWithinDateRange(LocalDateTime dateTime, LocalDate startDate, LocalDate endDate) {
+        if (dateTime == null) return false;
         LocalDate date = dateTime.toLocalDate();
         return !date.isBefore(startDate) && !date.isAfter(endDate);
     }
@@ -316,31 +402,33 @@ public class MaintenanceManager {
     public void displayPendingTasks() {
         System.out.println("\nPending Cleaning Tasks:");
         System.out.println("--------------------------------------------------");
-        System.out.printf("%-10s %-30s %-15s %-10s%n", "ID", "Description", "Frequency", "Status");
+        System.out.printf("%-10s %-30s %-15s %-15s %-15s%n", "ID", "Description", "Frequency/Priority", "Status", "Assigned To");
         
         for (CleaningTask task : cleaningTasks.values()) {
             if (task.getStatus() != TaskStatus.COMPLETED) {
-                System.out.printf("%-10s %-30s %-15s %-10s%n",
+                System.out.printf("%-10s %-30s %-15s %-15s %-15s%n",
                     task.getTaskId(),
                     task.getDescription(),
                     task.getFrequency(),
-                    task.getStatus());
+                    task.getStatus(),
+                    task.getAssignedTo() != null ? task.getAssignedTo() : "Unassigned");
             }
         }
-
+    
         System.out.println("\nPending Maintenance Tasks:");
         System.out.println("--------------------------------------------------");
-        System.out.printf("%-10s %-30s %-15s %-10s%n", "ID", "Description", "Priority", "Status");
+        System.out.printf("%-10s %-30s %-15s %-15s %-15s%n", "ID", "Description", "Priority", "Status", "Assigned To");
         
         for (MaintenanceTask task : maintenanceTasks.values()) {
             if (task.getStatus() != TaskStatus.COMPLETED) {
-                System.out.printf("%-10s %-30s %-15s %-10s%n",
+                System.out.printf("%-10s %-30s %-15s %-15s %-15s%n",
                     task.getTaskId(),
                     task.getDescription(),
                     task.getPriority(),
-                    task.getStatus());
+                    task.getStatus(),
+                    task.getAssignedTo() != null ? task.getAssignedTo() : "Unassigned");
             }
         }
     }
-
+    
 }

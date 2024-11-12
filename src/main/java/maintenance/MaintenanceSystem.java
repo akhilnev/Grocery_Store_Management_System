@@ -20,13 +20,13 @@ public class MaintenanceSystem {
     public void start() {
         while (true) {
             System.out.println("\nStore Cleaning and Maintenance System");
-            System.out.println("1. View Pending Tasks");
-            System.out.println("2. Assign Cleaning Task");
-            System.out.println("3. Complete Cleaning Task");
-            System.out.println("4. Report Maintenance Issue");
-            System.out.println("5. Assign Maintenance Task");
-            System.out.println("6. Complete Maintenance Task");
-            System.out.println("7. Generate Maintenance Report");
+            System.out.println("1. View Pending Tasks(Store Manager)");
+            System.out.println("2. Assign Cleaning Task(Store Manager)");
+            System.out.println("3. Complete Cleaning Task(Cleaning Staff)");
+            System.out.println("4. Report Maintenance Issue(Maintenance Staff)");
+            System.out.println("5. Assign Maintenance Task(Store Manager)");
+            System.out.println("6. Complete Maintenance Task(Maintenance Staff)");
+            System.out.println("7. Generate Maintenance Report(Head Office Manager)");
             System.out.println("8. Return to Main Menu");
             System.out.print("Choose an option: ");
 
