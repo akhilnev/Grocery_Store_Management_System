@@ -228,8 +228,8 @@ public class SecurityManager {
             System.out.println("Select new status:");
             System.out.println("1. Resolved");
             System.out.println("2. Not Resolved");
-            System.out.println("3. Under Investigation");
-            System.out.print("Enter choice (1-3): ");
+           // System.out.println("3. Under Investigation");
+            System.out.print("Enter choice (1-2): ");
             
             int statusChoice = Integer.parseInt(scanner.nextLine());
             String newStatus;
