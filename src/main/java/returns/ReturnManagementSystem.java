@@ -51,11 +51,17 @@ public class ReturnManagementSystem {
     public void start() {
         while (true) {
             System.out.println("\nReturn Management System");
-            System.out.println("1. Process New Return");
-            System.out.println("2. View Return History");
-            System.out.println("3. Approve Pending Returns");
-            System.out.println("4. Update Inventory for Returns");
-            System.out.println("5. Generate Returns Analytics Report");
+            // Customer Service Operations
+            System.out.println("1. Process New Return (Customer Service)");
+            
+            // Manager Operations
+            System.out.println("2. Approve Pending Returns (Store Manager)");
+            System.out.println("3. Update Inventory for Returns (Store Manager)");
+            
+            // Reporting and History
+            System.out.println("4. View Return History (Store Manager)");
+            System.out.println("5. Generate Returns Analytics Report (Store Manager)");
+            
             System.out.println("6. Return to Main Menu");
             System.out.print("Choose an option: ");
 
@@ -67,13 +73,13 @@ public class ReturnManagementSystem {
                     processNewReturn();
                     break;
                 case 2:
-                    viewReturnHistory();
-                    break;
-                case 3:
                     approvePendingReturns();
                     break;
-                case 4:
+                case 3:
                     updateInventoryForReturns();
+                    break;
+                case 4:
+                    viewReturnHistory();
                     break;
                 case 5:
                     analyticsService.generateAnalyticsReport();
