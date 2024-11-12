@@ -5,6 +5,10 @@ import inventory.service.InventoryManager;
 import inventory.service.HeadOfficeManager;
 import java.time.LocalDate;
 import java.util.Scanner;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * Main system class that handles the user interface and interaction
@@ -31,13 +35,14 @@ public class InventoryManagementSystem {
     public void start() {
         while (true) {
             System.out.println("\nInventory Management System");
-            System.out.println("1. Add New Product");
-            System.out.println("2. Update Stock Level");
-            System.out.println("3. Adjust Product Price");
-            System.out.println("4. Check Low Stock");
-            System.out.println("5. Track Expiring Products");
-            System.out.println("6. Remove Obsolete Products");
-            System.out.println("7. Exit");
+            System.out.println("1. Add New Product ( Store Manager )");
+            System.out.println("2. Update Stock Level ( Inventory Clerk )");
+            System.out.println("3. Adjust Product Price (Store Manager)");
+            System.out.println("4. Check Low Stock ( Inventory Clerk )");
+            System.out.println("5. Track Expiring Products ( Inventory Clerk )");
+            System.out.println("6. Remove Obsolete Products ( Store Manager )");
+            System.out.println("7. View Store Inventory");
+            System.out.println("8. Exit");
             System.out.print("Choose an option: ");
 
             int choice = scanner.nextInt();
@@ -63,6 +68,9 @@ public class InventoryManagementSystem {
                     removeObsoleteProducts();
                     break;
                 case 7:
+                    viewStoreInventory();
+                    break;
+                case 8:
                     System.out.println("Exiting...");
                     return;
                 default:
@@ -84,7 +92,43 @@ public class InventoryManagementSystem {
         System.out.print("Enter supplier: ");
         String supplier = scanner.nextLine();
         
-        Product newProduct = new Product(id, name, price, stockLevel, supplier, LocalDate.now().plusMonths(6));
+        System.out.println("\nSelect expiry timeline:");
+        System.out.println("1. 6 months (default)");
+        System.out.println("2. 1 year");
+        System.out.println("3. 2 years");
+        System.out.println("4. Custom date (YYYY-MM-DD)");
+        System.out.print("Choose option: ");
+        
+        int expiryChoice = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+        
+        LocalDate expiryDate;
+        switch (expiryChoice) {
+            case 2:
+                expiryDate = LocalDate.now().plusYears(1);
+                break;
+            case 3:
+                expiryDate = LocalDate.now().plusYears(2);
+                break;
+            case 4:
+                System.out.print("Enter expiry date (YYYY-MM-DD): ");
+                String dateStr = scanner.nextLine();
+                try {
+                    expiryDate = LocalDate.parse(dateStr);
+                    if (expiryDate.isBefore(LocalDate.now())) {
+                        System.out.println("Warning: Expiry date is in the past. Using default (6 months)");
+                        expiryDate = LocalDate.now().plusMonths(6);
+                    }
+                } catch (Exception e) {
+                    System.out.println("Invalid date format. Using default (6 months)");
+                    expiryDate = LocalDate.now().plusMonths(6);
+                }
+                break;
+            default:
+                expiryDate = LocalDate.now().plusMonths(6);
+        }
+        
+        Product newProduct = new Product(id, name, price, stockLevel, supplier, expiryDate);
         if (inventoryManager.addNewProduct(newProduct)) {
             System.out.println("Product added successfully");
         } else {
@@ -119,26 +163,93 @@ public class InventoryManagementSystem {
     }
 
     private void checkLowStock() {
-        if (inventoryManager.checkLowStock()) {
-            System.out.println("There are products with low stock levels");
+        List<Product> lowStockProducts = inventoryManager.checkLowStock();
+        if (!lowStockProducts.isEmpty()) {
+            System.out.println("\nProducts with Low Stock (Below 5 units):");
+            System.out.println("ID | Name | Current Stock | Supplier");
+            System.out.println("----------------------------------------");
+            
+            lowStockProducts.forEach(product -> {
+                System.out.printf("%s | %s | %d | %s%n",
+                    product.getId(),
+                    product.getName(),
+                    product.getStockLevel(),
+                    product.getSupplier());
+            });
         } else {
-            System.out.println("All stock levels are adequate");
+            System.out.println("No products are running low on stock.");
         }
     }
 
     private void trackExpiringProducts() {
-        if (inventoryManager.trackExpiry()) {
-            System.out.println("There are products nearing expiration");
+        List<Product> expiringProducts = inventoryManager.trackExpiry();
+        if (!expiringProducts.isEmpty()) {
+            System.out.println("\nProducts Expiring Within 30 Days:");
+            System.out.println("ID | Name | Stock | Expiry Date");
+            System.out.println("--------------------------------");
+            
+            expiringProducts.forEach(product -> {
+                System.out.printf("%s | %s | %d | %s%n",
+                    product.getId(),
+                    product.getName(),
+                    product.getStockLevel(),
+                    product.getExpirationDate());
+            });
         } else {
-            System.out.println("No products are nearing expiration");
+            System.out.println("No products are expiring within the next 30 days");
         }
     }
 
     private void removeObsoleteProducts() {
-        if (inventoryManager.removeObsoleteProducts()) {
-            System.out.println("Obsolete products removed successfully");
+        List<Product> expiredProducts = inventoryManager.getExpiredProducts();
+        
+        if (expiredProducts.isEmpty()) {
+            System.out.println("No expired products found.");
+            return;
+        }
+
+        System.out.println("\nExpired Products Found:");
+        System.out.println("ID | Name | Stock | Expiry Date");
+        System.out.println("--------------------------------");
+        
+        expiredProducts.forEach(product -> {
+            System.out.printf("%s | %s | %d | %s%n",
+                product.getId(),
+                product.getName(),
+                product.getStockLevel(),
+                product.getExpirationDate());
+        });
+
+        System.out.print("\nDo you want to remove these expired products? (yes/no): ");
+        String response = scanner.nextLine().trim().toLowerCase();
+        
+        if (response.equals("yes")) {
+            if (inventoryManager.removeObsoleteProducts(expiredProducts)) {
+                System.out.println("Expired products have been removed successfully");
+            } else {
+                System.out.println("Failed to remove expired products");
+            }
         } else {
-            System.out.println("Failed to remove obsolete products");
+            System.out.println("Operation cancelled. Products retained in inventory.");
+        }
+    }
+
+    private void viewStoreInventory() {
+        try {
+            String filePath = "src/main/java/store/data/" + storeId + "_inventory.txt";
+            System.out.println("\nCurrent Inventory for " + storeId + ":");
+            System.out.println("ID | Name | Price | Stock | Supplier | Expiry Date");
+            System.out.println("------------------------------------------------");
+            
+            Files.lines(Paths.get(filePath))
+                 .forEach(line -> {
+                     String[] parts = line.split(",");
+                     System.out.printf("%s | %s | $%.2f | %s | %s | %s%n",
+                         parts[0], parts[1], Double.parseDouble(parts[2]),
+                         parts[3], parts[4], parts[5]);
+                 });
+        } catch (IOException e) {
+            System.out.println("Error reading inventory file: " + e.getMessage());
         }
     }
 

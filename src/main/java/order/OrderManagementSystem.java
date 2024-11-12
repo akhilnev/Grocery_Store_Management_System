@@ -46,12 +46,13 @@ public class OrderManagementSystem {
     public void start() {
         while (true) {
             System.out.println("\nOrder Management System");
-            System.out.println("1. New Order");
-            System.out.println("2. View Available Products");
-            System.out.println("3. Add Item to Order");
-            System.out.println("4. Process Payment");
-            System.out.println("5. Cancel Order");
-            System.out.println("6. Return to Main Menu");
+            System.out.println("1. New Order ( Customer )");
+            System.out.println("2. View Available Products ( Management System)");
+            System.out.println("3. Add Item to Order ( Cashier)");
+            System.out.println("4. Process Payment (Payment Processor )");
+            System.out.println("5. Cancel Order ( Cashier )");
+            System.out.println("6. View Store Orders ( Store Manager )");
+            System.out.println("7. Return to Main Menu");
             System.out.print("Choose an option: ");
 
             int choice = scanner.nextInt();
@@ -74,6 +75,9 @@ public class OrderManagementSystem {
                     cancelOrder();
                     break;
                 case 6:
+                    viewStoreOrders();
+                    break;
+                case 7:
                     return;
                 default:
                     System.out.println("Invalid option");
@@ -267,5 +271,38 @@ public class OrderManagementSystem {
         } catch (IOException e) {
             System.err.println("Error saving data: " + e.getMessage());
         }
+    }
+
+    private void viewStoreOrders() {
+        String orderFileName = "./src/main/java/store/data/" + storeId + "_orders.txt";
+        File orderFile = new File(orderFileName);
+        
+        if (!orderFile.exists()) {
+            System.out.println("No orders found for store " + storeId);
+            return;
+        }
+
+        System.out.println("\nStore Orders for " + storeId);
+        System.out.println("--------------------------------------------------");
+        System.out.printf("%-12s %-15s %-10s %-10s %s%n", 
+            "Date", "Order ID", "Store ID", "Payment", "Amount");
+        System.out.println("--------------------------------------------------");
+
+        try (Scanner fileScanner = new Scanner(orderFile)) {
+            while (fileScanner.hasNextLine()) {
+                String[] orderData = fileScanner.nextLine().split(",");
+                if (orderData.length == 5) {
+                    System.out.printf("%-12s %-15s %-10s %-10s $%.2f%n",
+                        orderData[0],    // Date
+                        orderData[1],    // Order ID
+                        orderData[2],    // Store ID
+                        orderData[3],    // Payment Method
+                        Double.parseDouble(orderData[4])); // Amount
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Error reading orders: " + e.getMessage());
+        }
+        System.out.println("--------------------------------------------------");
     }
 }

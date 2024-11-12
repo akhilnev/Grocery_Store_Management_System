@@ -1,1 +1,2 @@
 2024-11-07,1,ST002,CASH,139.80
+2024-11-11,akhilesh_grocery_list,ST002,CASH,44.00
