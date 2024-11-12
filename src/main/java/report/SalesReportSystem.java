@@ -1,10 +1,14 @@
 package report;
 
+import report.service.ReportManager;
+import report.model.SalesReport;
+import inventory.model.Product;
 import inventory.service.InventoryManager;
 import inventory.service.HeadOfficeManager;
 import java.util.Scanner;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
 
 /**
  * Main system class that handles the generation and management
@@ -75,9 +79,38 @@ public class SalesReportSystem {
     }
 
     private void generateReport(LocalDate startDate, LocalDate endDate) {
+        ReportManager reportManager = new ReportManager(storeId, inventoryManager);
+        SalesReport report = reportManager.generateReport(startDate, endDate);
+
+        // Print report to terminal
+        System.out.println("\n=== Sales Report ===");
+        System.out.println("Store ID: " + storeId);
+        System.out.println("Period: " + startDate + " to " + endDate);
+        System.out.println("----------------------------------------");
+        System.out.println("Total Revenue: $" + String.format("%.2f", report.getTotalRevenue()));
+        System.out.println("Total Units Sold: " + report.getTotalUnits());
+        
+        if (!report.getProductSales().isEmpty()) {
+            System.out.println("\nProduct Sales Breakdown:");
+            System.out.println("----------------------------------------");
+            for (Map.Entry<String, Integer> entry : report.getProductSales().entrySet()) {
+                Product product = inventoryManager.getProduct(entry.getKey());
+                if (product != null) {
+                    System.out.printf("%s (%s): %d units, $%.2f%n",
+                        product.getName(),
+                        entry.getKey(),
+                        entry.getValue(),
+                        report.getProductRevenue().get(entry.getKey()));
+                }
+            }
+        } else {
+            System.out.println("\nNo sales recorded for this period.");
+        }
+        System.out.println("----------------------------------------");
+
+        // Save report to file
         String fileName = String.format("./src/main/java/store/data/%s_report_%s_%s.txt", 
             storeId, startDate, endDate);
-        // Report generation logic will be implemented here
-        System.out.println("Report saved to: " + fileName);
+        System.out.println("\nReport saved to: " + fileName);
     }
 }
