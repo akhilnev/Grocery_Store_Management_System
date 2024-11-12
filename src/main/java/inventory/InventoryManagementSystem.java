@@ -139,6 +139,12 @@ public class InventoryManagementSystem {
     private void updateStockLevel() {
         System.out.print("Enter product ID: ");
         String id = scanner.nextLine();
+        
+        if (!inventoryManager.getCurrentInventory().containsKey(id)) {
+            System.out.println("Failed to update stock: No such product exists with ID " + id);
+            return;
+        }
+        
         System.out.print("Enter additional quantity: ");
         int quantity = scanner.nextInt();
         

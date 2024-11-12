@@ -27,8 +27,8 @@ public class SalesReportSystem {
     public void start() {
         while (true) {
             System.out.println("\nSales Report System");
-            System.out.println("1. Generate Daily Report");
-            System.out.println("2. Generate Custom Period Report");
+            System.out.println("1. Generate Daily Report (Store Manager)");
+            System.out.println("2. Generate Custom Period Report (Store Manager)");
             System.out.println("3. Return to Main Menu");
             System.out.print("Choose an option: ");
 
