@@ -18,9 +18,9 @@ public interface InventoryInterface {
 
     /**
      * Checks for products with low stock levels
-     * @return boolean indicating if any products are low in stock
+     * @return List of products that are low in stock
      */
-    boolean checkLowStock();
+    List<Product> checkLowStock();
 
     /**
      * Tracks products nearing expiration

@@ -90,11 +90,10 @@ public class InventoryManager implements InventoryInterface {
     }
 
     @Override
-    public boolean checkLowStock() {
-        List<Product> lowStockProducts = getCurrentInventory().values().stream()
-            .filter(p -> p.getStockLevel() < 10 && !p.isObsolete())
+    public List<Product> checkLowStock() {
+        return getCurrentInventory().values().stream()
+            .filter(p -> p.getStockLevel() < 5 && !p.isObsolete())
             .collect(Collectors.toList());
-        return !lowStockProducts.isEmpty();
     }
 
     @Override

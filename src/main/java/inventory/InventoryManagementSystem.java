@@ -163,10 +163,21 @@ public class InventoryManagementSystem {
     }
 
     private void checkLowStock() {
-        if (inventoryManager.checkLowStock()) {
-            System.out.println("There are products with low stock levels");
+        List<Product> lowStockProducts = inventoryManager.checkLowStock();
+        if (!lowStockProducts.isEmpty()) {
+            System.out.println("\nProducts with Low Stock (Below 5 units):");
+            System.out.println("ID | Name | Current Stock | Supplier");
+            System.out.println("----------------------------------------");
+            
+            lowStockProducts.forEach(product -> {
+                System.out.printf("%s | %s | %d | %s%n",
+                    product.getId(),
+                    product.getName(),
+                    product.getStockLevel(),
+                    product.getSupplier());
+            });
         } else {
-            System.out.println("All stock levels are adequate");
+            System.out.println("No products are running low on stock.");
         }
     }
 
