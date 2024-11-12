@@ -77,11 +77,11 @@ public class CustomerAssistanceManager {
 
         while (true) {
             System.out.println("\nCustomer Assistance System");
-            System.out.println("1. New Assistance Request");
-            System.out.println("2. View Active Requests");
-            System.out.println("3. Handle Restricted Product Access");
-            System.out.println("4. Complete Request");
-            System.out.println("5. View Request History");
+            System.out.println("1. New Assistance Request (Customer Service)");
+            System.out.println("2. View Active Requests (Service Manager)");
+            System.out.println("3. Handle Restricted Product Access (Service Manager)");
+            System.out.println("4. Complete Request (Service Manager)");
+            System.out.println("5. View Request History (Service Manager)");
             System.out.println("6. Return to Main Menu");
             System.out.print("Choose an option: ");
 
