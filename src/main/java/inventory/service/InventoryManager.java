@@ -90,30 +90,38 @@ public class InventoryManager implements InventoryInterface {
     }
 
     @Override
-    public boolean checkLowStock() {
-        List<Product> lowStockProducts = getCurrentInventory().values().stream()
-            .filter(p -> p.getStockLevel() < 10 && !p.isObsolete())
+    public List<Product> checkLowStock() {
+        return getCurrentInventory().values().stream()
+            .filter(p -> p.getStockLevel() < 5 && !p.isObsolete())
             .collect(Collectors.toList());
-        return !lowStockProducts.isEmpty();
     }
 
     @Override
-    public boolean trackExpiry() {
-        LocalDate warningDate = LocalDate.now().plusDays(7);
-        List<Product> expiringProducts = getCurrentInventory().values().stream()
+    public List<Product> trackExpiry() {
+        LocalDate warningDate = LocalDate.now().plusMonths(1);
+        return getCurrentInventory().values().stream()
             .filter(p -> p.getExpirationDate() != null && 
                         p.getExpirationDate().isBefore(warningDate) &&
                         !p.isObsolete())
             .collect(Collectors.toList());
-        return !expiringProducts.isEmpty();
     }
 
     @Override
-    public boolean removeObsoleteProducts() {
-        getCurrentInventory().values().stream()
-            .filter(Product::isObsolete)
-            .forEach(p -> getCurrentInventory().remove(p.getId()));
+    public boolean removeObsoleteProducts(List<Product> productsToRemove) {
+        // Mark selected products as obsolete and remove them
+        productsToRemove.forEach(product -> {
+            product.markAsObsolete();
+            getCurrentInventory().remove(product.getId());
+        });
         return updateStock();
+    }
+
+    // Add this new method to get expired products
+    public List<Product> getExpiredProducts() {
+        LocalDate today = LocalDate.now();
+        return getCurrentInventory().values().stream()
+                .filter(product -> product.getExpirationDate().isBefore(today))
+                .collect(Collectors.toList());
     }
 
     public Product getProduct(String productId) {
@@ -172,4 +180,5 @@ public class InventoryManager implements InventoryInterface {
     public Map<String, Product> getAllProducts() {
         return new HashMap<>(getCurrentInventory());
     }
+
 }
