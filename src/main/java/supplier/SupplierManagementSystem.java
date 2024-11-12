@@ -39,10 +39,10 @@ public class SupplierManagementSystem {
     public void start() {
         while (true) {
             System.out.println("\nSupplier Management System");
-            System.out.println("1. Schedule New Shipment");
-            System.out.println("2. Verify Received Shipment");
-            System.out.println("3. View Supplier Ratings");
-            System.out.println("4. View Pending Shipments");
+            System.out.println("1. Schedule New Shipment (Supplier Manager)");
+            System.out.println("2. Verify Received Shipment (Inventory Clerk)");
+            System.out.println("3. View Suppliers and Ratings (Store Manager)");
+            System.out.println("4. View Pending Shipments (Supplier Manager)");
             System.out.println("5. Return to Main Menu");
             System.out.print("Choose an option: ");
 
@@ -103,14 +103,15 @@ public class SupplierManagementSystem {
         }
 
         if (supplierManager.confirmShipment(shipment)) {
-            System.out.println("Shipment scheduled successfully");
+            System.out.println("Shipment scheduled successfully. Please verify the shipment once received.");
+            System.out.println("Shipment ID: " + shipment.getId());
         } else {
             System.out.println("Failed to schedule shipment");
         }
     }
 
     private void viewSupplierRatings() {
-        System.out.println("\nSupplier Ratings");
+        System.out.println("\nSuppliers and Ratings");
         System.out.println("----------------------------------------");
         System.out.printf("%-10s %-20s %-10s%n", "ID", "Name", "Rating");
         System.out.println("----------------------------------------");
