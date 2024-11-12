@@ -51,15 +51,22 @@ public class SecurityManager {
             int choice = getUserChoice();
 
             switch (choice) {
-                case 1 -> viewIncidents();
-                case 2 -> reportSecurityIssue();
-                case 3 -> viewReportedIssues();
-                case 4 -> updateIncidentStatus();
-                case 5 -> {
-                    System.out.println("Exiting Security Management System...");
+                case 1:
+                    viewIncidents();
+                    break;
+                case 2:
+                    reportSecurityIssue();
+                    break;
+                case 3:
+                    viewReportedIssues();
+                    break;
+                case 4:
+                    updateIncidentStatus();
+                    break;
+                case 5:
                     return;
-                }
-                default -> System.out.println("Invalid option. Please try again.");
+                default:
+                    System.out.println("Invalid option. Please try again.");
             }
         }
     }
@@ -171,13 +178,23 @@ public class SecurityManager {
             System.out.print("Enter choice (1-4): ");
             
             int severityChoice = Integer.parseInt(scanner.nextLine());
-            String severity = switch (severityChoice) {
-                case 1 -> "Low";
-                case 2 -> "Medium";
-                case 3 -> "High";
-                case 4 -> "Severe";
-                default -> throw new IllegalArgumentException("Invalid severity level");
-            };
+            String severity;
+            switch (severityChoice) {
+                case 1:
+                    severity = "Low";
+                    break;
+                case 2:
+                    severity = "Medium";
+                    break;
+                case 3:
+                    severity = "High";
+                    break;
+                case 4:
+                    severity = "Severe";
+                    break;
+                default:
+                    throw new IllegalArgumentException("Invalid severity level");
+            }
 
             alertSystem.reportSecurityIssue(description, severity);
             System.out.println("Security issue reported successfully.");
@@ -215,12 +232,20 @@ public class SecurityManager {
             System.out.print("Enter choice (1-3): ");
             
             int statusChoice = Integer.parseInt(scanner.nextLine());
-            String newStatus = switch (statusChoice) {
-                case 1 -> "Resolved";
-                case 2 -> "Not Resolved";
-                case 3 -> "Under Investigation";
-                default -> throw new IllegalArgumentException("Invalid status choice");
-            };
+            String newStatus;
+            switch (statusChoice) {
+                case 1:
+                    newStatus = "Resolved";
+                    break;
+                case 2:
+                    newStatus = "Not Resolved";
+                    break;
+                case 3:
+                    newStatus = "Under Investigation";
+                    break;
+                default:
+                    throw new IllegalArgumentException("Invalid status choice");
+            }
 
             boolean updated = alertSystem.resolveIncident(id);
             if (updated) {

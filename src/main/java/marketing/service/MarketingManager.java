@@ -165,7 +165,7 @@ public class MarketingManager {
                     int stock = inventoryService.checkStock(productId);
                     System.out.printf("Product %s: %d units in stock%n", productId, stock);
                     if (inventoryService.isLowStock(productId)) {
-                        System.out.println("⚠️ Low stock warning!");
+                        System.out.println("! Low stock warning!");
                     }
                 }
             }

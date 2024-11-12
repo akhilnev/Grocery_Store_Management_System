@@ -42,7 +42,7 @@ public class NotificationService {
 
     public void notifyLowInventory(String productId, int currentStock) {
         System.out.println("\n=== Low Inventory Alert ===");
-        System.out.printf("⚠️ Low stock warning for product %s%n", productId);
+        System.out.printf("! Low stock warning for product %s%n", productId);
         System.out.printf("Current stock: %d units%n", currentStock);
         System.out.println("Please restock soon to maintain promotion effectiveness.");
     }
