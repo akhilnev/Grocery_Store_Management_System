@@ -1,5 +1,8 @@
 package inventory.interfaces;
 
+import inventory.model.Product;
+import java.util.List;
+
 /**
  * Interface defining the core inventory management operations
  * that must be implemented by inventory managers.
@@ -21,13 +24,13 @@ public interface InventoryInterface {
 
     /**
      * Tracks products nearing expiration
-     * @return boolean indicating if any products are expiring soon
+     * @return List of products expiring within 30 days
      */
-    boolean trackExpiry();
+    List<Product> trackExpiry();
 
     /**
      * Removes obsolete products from inventory
      * @return boolean indicating removal success
      */
-    boolean removeObsoleteProducts();
+    boolean removeObsoleteProducts(List<Product> productsToRemove);
 }
