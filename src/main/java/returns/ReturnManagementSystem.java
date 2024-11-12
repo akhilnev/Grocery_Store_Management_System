@@ -172,9 +172,9 @@ public class ReturnManagementSystem {
         if (refundMethod != null) {
             returnOrder.setRefundMethod(refundMethod);
             if (returnManager.processReturn(returnOrder)) {
-                System.out.println("Return processed successfully");
+                System.out.println("Return request processed successfully");
                 System.out.println("Refund amount: $" + 
-                    String.format("%.2f", returnOrder.getRefundAmount()));
+                    String.format("%.2f", returnOrder.getRefundAmount()) + " (pending approval)");
             }
         }
     }
