@@ -175,6 +175,8 @@ public class ReturnManagementSystem {
                 System.out.println("Return request processed successfully");
                 System.out.println("Refund amount: $" + 
                     String.format("%.2f", returnOrder.getRefundAmount()) + " (pending approval)");
+                // Print and save receipt
+                returnManager.printReturnReceipt(returnOrder);
             }
         }
     }

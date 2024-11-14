@@ -51,5 +51,6 @@ public class Return {
     public void setApproved(boolean approved) { this.approved = approved; }
     public double getRefundAmount() { return refundAmount; }
     public LocalDateTime getReturnDate() { return returnDate; }
+    public String getRefundMethod() { return refundMethod; }
     public void setRefundMethod(String refundMethod) { this.refundMethod = refundMethod; }
 }
