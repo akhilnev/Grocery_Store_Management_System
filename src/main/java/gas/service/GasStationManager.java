@@ -61,6 +61,7 @@ public class GasStationManager {
         
         // Check stock levels
         checkStockLevels();
+        pump.incrementUsage();
     }
 
     private void checkStockLevels() {
@@ -118,10 +119,20 @@ public class GasStationManager {
 
     public boolean performPumpSafetyCheck(int pumpNumber) {
         PumpStatus status = pumps.get(pumpNumber);
-        return status != null && status.isOperational();
+        if (status == null) return false;
+        
+        if (status.needsMaintenance()) {
+            status.setOperational(false);
+            return false;
+        }
+        return status.isOperational();
     }
 
     public PumpStatus getPumpStatus(int pumpNumber) {
         return pumps.get(pumpNumber);
+    }
+
+    public Map<String, RefuelingTransaction> getTodayTransactions() {
+        return transactions;
     }
 }

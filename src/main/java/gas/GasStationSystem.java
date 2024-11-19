@@ -42,7 +42,12 @@ public class GasStationSystem {
                 case 2: viewFuelStock(); break;
                 case 3: recordTankRefill(); break;
                 case 4: performSafetyCheck(); break;
-                case 5: analyticsService.generateSalesReport(); break;
+                case 5: 
+                    analyticsService.generateSalesReport(); 
+                    System.out.println("\nSales report generated successfully!");
+                    System.out.println("Location: ./src/main/java/store/data/" + storeId + "_gas_sales_" + 
+                        LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + ".txt");
+                    break;
                 case 6: viewPumpStatus(); break;
                 case 7: return;
                 default: System.out.println("Invalid option");
@@ -60,18 +65,20 @@ public class GasStationSystem {
             return;
         }
 
-        System.out.println("Select payment method:");
+        System.out.println("\nSelect payment method:");
         System.out.println("1. Pre-pay at station");
         System.out.println("2. Pay at pump");
         System.out.println("3. Post-pay at counter");
+        System.out.print("Choose an option: ");
         
         int paymentChoice = scanner.nextInt();
         scanner.nextLine();
 
-        System.out.println("Select fuel type:");
+        System.out.println("\nSelect fuel type:");
         System.out.println("1. Regular (87)");
         System.out.println("2. Plus (89)");
         System.out.println("3. Premium (93)");
+        System.out.print("Choose an option: ");
         
         int fuelChoice = scanner.nextInt();
         scanner.nextLine();
