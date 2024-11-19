@@ -6,6 +6,7 @@ import payment.service.PaymentProcessor;
 import java.util.Scanner;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Random;
 
 public class GasStationSystem {
     private GasStationManager gasManager;
@@ -31,7 +32,8 @@ public class GasStationSystem {
             System.out.println("4. Perform Safety Check");
             System.out.println("5. Generate Sales Report");
             System.out.println("6. View Pump Status");
-            System.out.println("7. Return to Main Menu");
+            System.out.println("7. Check Tire Pressure");
+            System.out.println("8. Return to Main Menu");
             System.out.print("Choose an option: ");
             
             int choice = scanner.nextInt();
@@ -49,7 +51,8 @@ public class GasStationSystem {
                         LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + ".txt");
                     break;
                 case 6: viewPumpStatus(); break;
-                case 7: return;
+                case 7: checkTirePressure(); break;
+                case 8: return;
                 default: System.out.println("Invalid option");
             }
         }
@@ -196,5 +199,117 @@ public class GasStationSystem {
                 status.getLastMaintenance().format(
                     DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
         }
+    }
+
+    private void checkTirePressure() {
+        System.out.println("\nTire Pressure Check & Fill Service");
+        System.out.println("--------------------------------------------------");
+        System.out.print("Enter vehicle type (1. Car, 2. SUV, 3. Truck): ");
+        int vehicleType = scanner.nextInt();
+        scanner.nextLine();
+
+        int recommendedPSI;
+        switch (vehicleType) {
+            case 1: recommendedPSI = 32; break;
+            case 2: recommendedPSI = 35; break;
+            case 3: recommendedPSI = 45; break;
+            default: 
+                System.out.println("Invalid vehicle type");
+                return;
+        }
+
+        String[] tirePositions = {"Front Left", "Front Right", "Rear Left", "Rear Right"};
+        Random random = new Random();
+
+        while (true) {
+            System.out.println("\nSelect tire to check:");
+            for (int i = 0; i < tirePositions.length; i++) {
+                System.out.println((i + 1) + ". " + tirePositions[i]);
+            }
+            System.out.println("5. Exit tire check");
+            System.out.print("Choose an option: ");
+            
+            int tireChoice = scanner.nextInt();
+            scanner.nextLine();
+            
+            if (tireChoice == 5) break;
+            if (tireChoice < 1 || tireChoice > 4) {
+                System.out.println("Invalid tire selection");
+                continue;
+            }
+
+            String position = tirePositions[tireChoice - 1];
+            System.out.printf("\nChecking %s tire...%n", position);
+            System.out.println("   _________________");
+            System.out.println("  /                 \\");
+            System.out.println(" /                   \\");
+            System.out.println("|      CHECKING       |");
+            System.out.println(" \\                   /");
+            System.out.println("  \\_________________/");
+            
+            int currentPSI = recommendedPSI + random.nextInt(7) - 10;
+            
+            for (int i = 0; i < 12; i++) {
+                int fluctuation = currentPSI + random.nextInt(5) - 2;
+                System.out.print("\rCurrent pressure: " + fluctuation + " PSI");
+                try {
+                    Thread.sleep(400);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+
+            System.out.printf("%n%nFinal reading: %d PSI%n", currentPSI);
+            System.out.printf("Recommended: %d PSI%n", recommendedPSI);
+            
+            if (currentPSI < recommendedPSI) {
+                System.out.println("\nTire needs air. Adding air...");
+                System.out.println("   _________________");
+                System.out.println("  /                 \\");
+                System.out.println(" /                   \\");
+                System.out.println("|     FILLING AIR     |");
+                System.out.println(" \\                   /");
+                System.out.println("  \\_________________/");
+                
+                while (currentPSI < recommendedPSI) {
+                    currentPSI++;
+                    int displayPSI = currentPSI + random.nextInt(2);
+                    System.out.print("\rPressure: " + displayPSI + " PSI");
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    }
+                }
+                System.out.println("\nAir added successfully!");
+            } else if (currentPSI > recommendedPSI) {
+                System.out.println("\nTire is over-inflated. Releasing air...");
+                System.out.println("   _________________");
+                System.out.println("  /                 \\");
+                System.out.println(" /                   \\");
+                System.out.println("|   RELEASING AIR     |");
+                System.out.println(" \\                   /");
+                System.out.println("  \\_________________/");
+                
+                while (currentPSI > recommendedPSI) {
+                    currentPSI--;
+                    int displayPSI = currentPSI + random.nextInt(2);
+                    System.out.print("\rPressure: " + displayPSI + " PSI");
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    }
+                }
+                System.out.println("\nAir released successfully!");
+            } else {
+                System.out.println("Tire pressure is perfect!");
+            }
+            
+            System.out.println("\nFinal pressure: " + currentPSI + " PSI ✓");
+            System.out.println("--------------------------------------------------");
+        }
+        
+        System.out.println("\nTire pressure check complete!");
     }
 }
