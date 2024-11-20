@@ -56,6 +56,57 @@ public class PharmacySystem {
             System.out.println("Invalid or expired prescription");
             return;
         }
+
+        Prescription prescription = pharmacyManager.getPrescription(prescriptionId);
+        System.out.println("\nPrescription Details:");
+        System.out.println("Patient ID: " + prescription.getCustomerId());
+        System.out.println("Medication: " + prescription.getMedicationName());
+        System.out.println("Dosage: " + prescription.getDosage());
+        System.out.println("Quantity: " + prescription.getQuantity());
+        System.out.println("Instructions: " + prescription.getInstructions());
+        System.out.println("Doctor: " + prescription.getDoctorName());
+        System.out.println("Insurance: " + prescription.getInsuranceProvider());
+        System.out.printf("Price: $%.2f%n", prescription.getPrice());
+
+        System.out.print("\nPharmacist verification required. Approve? (yes/no): ");
+        String approval = scanner.nextLine();
+        
+        if (!approval.equalsIgnoreCase("yes")) {
+            System.out.println("Prescription rejected by pharmacist");
+            return;
+        }
+
+        // Get medication ID from name
+        String medicationId = null;
+        for (Medication med : pharmacyManager.getAllMedications()) {
+            if (med.getName().equalsIgnoreCase(prescription.getMedicationName())) {
+                medicationId = med.getMedicationId();
+                break;
+            }
+        }
+
+        if (medicationId == null) {
+            System.out.println("Medication not found in inventory");
+            return;
+        }
+
+        // Check medication stock
+        if (!pharmacyManager.hasSufficientStock(medicationId, prescription.getQuantity())) {
+            System.out.println("Insufficient medication stock");
+            return;
+        }
+
+        // Process payment
+        System.out.println("\nProcessing insurance payment...");
+        if (processPayment(1, prescription.getPrice())) {
+            pharmacyManager.updateStock(medicationId, prescription.getQuantity());
+            System.out.println("\nPrescription filled successfully!");
+            System.out.println("Please provide usage instructions to the patient:");
+            System.out.println("- " + prescription.getInstructions());
+            System.out.println("- " + pharmacyManager.getMedication(medicationId).getWarnings());
+        } else {
+            System.out.println("Payment processing failed. Please verify insurance information.");
+        }
     }
 
     private void recordRestock() {

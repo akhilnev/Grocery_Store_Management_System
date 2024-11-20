@@ -149,4 +149,8 @@ public class PharmacyManager {
         }
         return expiring;
     }
+
+    public Prescription getPrescription(String prescriptionId) {
+        return prescriptions.get(prescriptionId);
+    }
 }
