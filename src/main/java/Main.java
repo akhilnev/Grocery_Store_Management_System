@@ -42,10 +42,10 @@ public class Main {
             System.out.println("8. Customer Assistance (Service Associate)");
             System.out.println("9. Security Management (Security Officer)");
             System.out.println("10. Marketing Management (Marketing Manager)");
-            System.out.println("11. Head Office Management (Head Office Manager)");
-            System.out.println("12. Store Performance Analytics (Head Office Manager)");
-            System.out.println("13. Change Store");
-            System.out.println("14. Exit");
+            System.out.println("13. Head Office Management (Head Office Manager)");
+            System.out.println("14. Store Performance Analytics (Head Office Manager)");
+            System.out.println("15. Change Store");
+            System.out.println("16. Exit");
             System.out.print("Choose a use case: ");
 
             int choice = scanner.nextInt();
@@ -82,16 +82,16 @@ public class Main {
                 case 10:
                     new MarketingManager().start();
                     break;
-                case 11:
+                case 13:
                     headOfficeManagementSystem.start(); // Access Head Office Management
                     break;
-                case 12:
+                case 14:
                     headOfficeManagementSystem.viewStorePerformance();
                     break;
-                case 13:
+                case 15:
                     storeId = null; // Trigger store selection in next loop
                     break;
-                case 14:
+                case 16:
                     System.out.println("Exiting...");
                     return;
                 default:
