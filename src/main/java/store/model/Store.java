@@ -1,21 +1,35 @@
 package store.model;
 
+import java.time.LocalDate;
+
 public class Store {
     private String storeId;
     private String name;
     private String location;
-    private String managerName;
+    private LocalDate openingDate;
 
-    public Store(String storeId, String name, String location, String managerName) {
+    public Store(String storeId, String name, String location, LocalDate openingDate) {
         this.storeId = storeId;
         this.name = name;
         this.location = location;
-        this.managerName = managerName;
+        this.openingDate = openingDate;
     }
 
-    // Getters
-    public String getStoreId() { return storeId; }
-    public String getName() { return name; }
-    public String getLocation() { return location; }
-    public String getManagerName() { return managerName; }
+    public String getStoreId() {
+        return storeId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public LocalDate getOpeningDate() {
+        return openingDate;
+    }
+
+    // Additional getters and setters as needed
 } 

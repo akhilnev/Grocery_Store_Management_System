@@ -9,6 +9,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.io.IOException;
 import java.util.List;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
 
 /**
  * Main system class that handles the user interface and interaction
@@ -20,6 +24,7 @@ public class InventoryManagementSystem {
     private InventoryManager inventoryManager;
     private Scanner scanner;
     private String storeId;
+    private static final String INVENTORY_DIR = "src/main/java/store/data/";
 
     /**
      * Constructor initializes the system with a specific store ID
@@ -80,8 +85,10 @@ public class InventoryManagementSystem {
     }
 
     private void addNewProduct() {
-        System.out.print("Enter product ID: ");
-        String id = scanner.nextLine();
+        // Generate random product ID
+        String id = generateProductId();
+        System.out.println("Generated Product ID: " + id);
+        
         System.out.print("Enter product name: ");
         String name = scanner.nextLine();
         System.out.print("Enter price: ");
@@ -134,6 +141,27 @@ public class InventoryManagementSystem {
         } else {
             System.out.println("Failed to add product");
         }
+    }
+
+    private String generateProductId() {
+        // Generate a random 8-character ID with format: PRD-XXXX (where X is alphanumeric)
+        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        StringBuilder sb = new StringBuilder("PRD-");
+        for (int i = 0; i < 4; i++) {
+            int index = (int)(chars.length() * Math.random());
+            sb.append(chars.charAt(index));
+        }
+        
+        // Check if ID already exists in inventory
+        while (inventoryManager.getCurrentInventory().containsKey(sb.toString())) {
+            sb.setLength(4); // Reset to "PRD-"
+            for (int i = 0; i < 4; i++) {
+                int index = (int)(chars.length() * Math.random());
+                sb.append(chars.charAt(index));
+            }
+        }
+        
+        return sb.toString();
     }
 
     private void updateStockLevel() {
@@ -256,6 +284,109 @@ public class InventoryManagementSystem {
                  });
         } catch (IOException e) {
             System.out.println("Error reading inventory file: " + e.getMessage());
+        }
+    }
+
+    // Head Office Stuff!!
+
+    public void setupInitialInventory() {
+        System.out.println("\nSetting up initial inventory for store: " + storeId);
+        System.out.println("Creating inventory file: " + INVENTORY_DIR + storeId + "_inventory.txt");
+
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(INVENTORY_DIR + storeId + "_inventory.txt"))) {
+            // Sample inventory based on a template
+            String[] initialItems = {
+                "P01001,Milk,4.29,40,Dairy Farm,2024-11-25",
+                "P01002,Bread,2.99,50,Baker's Delight,2024-11-20",
+                "P01003,Butter,3.49,20,Butter Co,2024-12-01"
+            };
+            for (String item : initialItems) {
+                bw.write(item);
+                bw.newLine();
+            }
+            System.out.println("Initial inventory setup completed for store: " + storeId);
+        } catch (IOException e) {
+            System.out.println("Error setting up inventory: " + e.getMessage());
+        }
+    }
+
+    public void handleStoreClosure() {
+        System.out.println("\nHandling inventory for store closure: " + storeId);
+        System.out.println("Generating redistribution or liquidation plan...");
+
+        System.out.print("Do you want to transfer inventory to another store? (yes/no): ");
+        String transferChoice = scanner.nextLine().trim();
+        if (transferChoice.equalsIgnoreCase("yes")) {
+            System.out.print("Enter Target Store ID: ");
+            String targetStoreId = scanner.nextLine().trim();
+            transferInventory(targetStoreId);
+        } else {
+            System.out.println("Proceeding with inventory liquidation.");
+            liquidateInventory();
+        }
+
+        System.out.println("Inventory handling completed for store closure.");
+    }
+
+    private void transferInventory(String targetStoreId) {
+        String sourceInventoryFile = INVENTORY_DIR + storeId + "_inventory.txt";
+        String targetInventoryFile = INVENTORY_DIR + targetStoreId + "_inventory.txt";
+
+        try (BufferedReader br = new BufferedReader(new FileReader(sourceInventoryFile));
+             BufferedWriter bw = new BufferedWriter(new FileWriter(targetInventoryFile, true))) {
+
+            String line;
+            while ((line = br.readLine()) != null) {
+                bw.write(line);
+                bw.newLine();
+            }
+
+            // Clear source inventory
+            new FileWriter(sourceInventoryFile, false).close();
+
+            System.out.println("Inventory transferred to store: " + targetStoreId);
+        } catch (IOException e) {
+            System.out.println("Error transferring inventory: " + e.getMessage());
+        }
+    }
+
+    private void liquidateInventory() {
+        String inventoryFile = INVENTORY_DIR + storeId + "_inventory.txt";
+        double totalAmount = 0.0;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(inventoryFile))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length < 6) continue;
+                double price = Double.parseDouble(parts[2].trim());
+                int quantity = Integer.parseInt(parts[3].trim());
+                totalAmount += price * quantity;
+            }
+        } catch (IOException e) {
+            System.out.println("Error reading inventory for liquidation: " + e.getMessage());
+            return;
+        }
+
+        // Generate receipt
+        String receiptFile = "src/main/java/store/data/receipts/" + storeId + "_liquidation_receipt.txt";
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(receiptFile))) {
+            bw.write("Liquidation Receipt for Store ID: " + storeId);
+            bw.newLine();
+            bw.write("Total Amount Returned: $" + String.format("%.2f", totalAmount));
+            bw.newLine();
+            bw.write("Date: " + LocalDate.now().toString());
+            System.out.println("Liquidation completed. Receipt generated at: " + receiptFile);
+        } catch (IOException e) {
+            System.out.println("Error writing liquidation receipt: " + e.getMessage());
+        }
+
+        // Clear inventory
+        try {
+            new FileWriter(inventoryFile, false).close();
+            System.out.println("Inventory liquidated and cleared for store: " + storeId);
+        } catch (IOException e) {
+            System.out.println("Error clearing inventory after liquidation: " + e.getMessage());
         }
     }
 

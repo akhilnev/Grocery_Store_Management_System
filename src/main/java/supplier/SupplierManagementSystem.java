@@ -188,4 +188,32 @@ public class SupplierManagementSystem {
             System.out.println("Verification process interrupted");
         }
     }
+
+    // Head Office Stuff!! - Implemented Basic Logic
+
+    public void prepareInitialShipment() {
+        System.out.println("\nPreparing initial shipment for store: " + storeId);
+        // Notify supplier with order details
+        System.out.println("Notifying supplier...");
+
+        // Simulate supplier confirmation
+        boolean shipmentConfirmed = simulateSupplierResponse();
+
+        if (shipmentConfirmed) {
+            System.out.println("Supplier confirmed shipment. Expected delivery in 7 days.");
+        } else {
+            System.out.println("Supplier delayed the shipment.");
+            notifyHeadOfficeManager();
+        }
+    }
+
+    private boolean simulateSupplierResponse() {
+        // Simulate a supplier response with an 80% chance of success
+        return Math.random() < 0.8;
+    }
+
+    private void notifyHeadOfficeManager() {
+        System.out.println("Notifying Head Office Manager about the shipment delay.");
+        // Implement notification logic, such as sending an email or alert
+    }
 }
