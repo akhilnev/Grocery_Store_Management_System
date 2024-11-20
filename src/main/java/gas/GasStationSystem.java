@@ -103,6 +103,7 @@ public class GasStationSystem {
             boolean paymentSuccess = processPayment(paymentChoice, amount);
             
             if (paymentSuccess) {
+                simulateFueling(transaction);
                 gasManager.completeRefueling(transaction);
                 printReceipt(transaction);
             } else {
@@ -311,5 +312,62 @@ public class GasStationSystem {
         }
         
         System.out.println("\nTire pressure check complete!");
+    }
+
+    private void simulateFueling(RefuelingTransaction transaction) {
+        System.out.println("\nStarting fueling process...");
+        double currentGallons = 0.0;
+        double targetGallons = transaction.getGallons();
+        Random random = new Random();
+        int canHeight = 10;
+        
+        while (currentGallons < targetGallons) {
+            currentGallons += 0.1;
+            double fillPercentage = currentGallons / targetGallons;
+            int filledLines = (int) (fillPercentage * canHeight);
+            
+            // Clear previous output
+            System.out.print("\033[H\033[2J");
+            System.out.flush();
+            
+            // Draw gas can with current fill level
+            System.out.println("      _________");
+            System.out.println("     /         \\");
+            System.out.println("  ___\\         /___");
+            System.out.println(" |                 |");
+            
+            // Fill level visualization (from bottom to top)
+            for (int i = 0; i < canHeight; i++) {
+                if (i >= (canHeight - filledLines)) {
+                    System.out.println(" |    #########    |");  // Filled with #
+                } else {
+                    System.out.println(" |                 |");    // Empty
+                }
+            }
+            
+            System.out.println(" |_________________|");
+            
+            // Display pump information
+            System.out.printf("\nPump #%d - %s\n", 
+                transaction.getPumpNumber(), 
+                transaction.getFuelType().getName());
+            System.out.printf("Gallons: %.3f / %.3f\n", 
+                currentGallons, targetGallons);
+            System.out.printf("Amount: $%.2f\n", 
+                currentGallons * transaction.getFuelType().getPricePerGallon());
+            
+            try {
+                Thread.sleep(500); // Increased from 300ms to 500ms
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+        
+        System.out.println("\nFueling complete! Please remove nozzle.");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
 }
