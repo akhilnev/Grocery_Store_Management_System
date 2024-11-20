@@ -13,6 +13,8 @@ import employee.PayrollSystem;
 import maintenance.MaintenanceSystem;
 import headoffice.HeadOfficeManagementSystem;
 import headoffice.StorePerformanceSystem;
+import gas.GasStationSystem;
+import pharmacy.PharmacySystem;
 
 public class Main {
     private static StoreManager storeManager = new StoreManager();
@@ -42,6 +44,8 @@ public class Main {
             System.out.println("8. Customer Assistance (Service Associate)");
             System.out.println("9. Security Management (Security Officer)");
             System.out.println("10. Marketing Management (Marketing Manager)");
+            System.out.println("11. Gas Station Management (Station Manager)");
+            System.out.println("12. Pharmacy Management (Pharmacy Technician)");
             System.out.println("13. Head Office Management (Head Office Manager)");
             System.out.println("14. Store Performance Analytics (Head Office Manager)");
             System.out.println("15. Change Store");
@@ -81,6 +85,12 @@ public class Main {
                     break;
                 case 10:
                     new MarketingManager().start();
+                    break;
+                case 11:
+                    new GasStationSystem(storeId).start();
+                    break;
+                case 12:
+                    new PharmacySystem(storeId).start();
                     break;
                 case 13:
                     headOfficeManagementSystem.start(); // Access Head Office Management
