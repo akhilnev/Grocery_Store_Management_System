@@ -11,9 +11,12 @@ import report.SalesReportSystem;
 import returns.ReturnManagementSystem;
 import employee.PayrollSystem;
 import maintenance.MaintenanceSystem;
+import headoffice.HeadOfficeManagementSystem;
+import headoffice.StorePerformanceSystem;
 
 public class Main {
     private static StoreManager storeManager = new StoreManager();
+    private static HeadOfficeManagementSystem headOfficeManagementSystem = new HeadOfficeManagementSystem(storeManager);
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
@@ -39,8 +42,10 @@ public class Main {
             System.out.println("8. Customer Assistance (Service Associate)");
             System.out.println("9. Security Management (Security Officer)");
             System.out.println("10. Marketing Management (Marketing Manager)");
-            System.out.println("11. Change Store");
-            System.out.println("12. Exit");
+            System.out.println("11. Head Office Management (Head Office Manager)");
+            System.out.println("12. Store Performance Analytics (Head Office Manager)");
+            System.out.println("13. Change Store");
+            System.out.println("14. Exit");
             System.out.print("Choose a use case: ");
 
             int choice = scanner.nextInt();
@@ -78,14 +83,20 @@ public class Main {
                     new MarketingManager().start();
                     break;
                 case 11:
-                    storeId = null; // This will trigger store selection in next loop
+                    headOfficeManagementSystem.start(); // Access Head Office Management
                     break;
                 case 12:
+                    headOfficeManagementSystem.viewStorePerformance();
+                    break;
+                case 13:
+                    storeId = null; // Trigger store selection in next loop
+                    break;
+                case 14:
                     System.out.println("Exiting...");
                     return;
                 default:
                     System.out.println("Invalid option");
-            }
+            }   
         }
     }
 
