@@ -26,13 +26,13 @@ public class GasStationSystem {
     public void start() {
         while (true) {
             System.out.println("\nGas Station Management System");
-            System.out.println("1. Start New Refueling");
-            System.out.println("2. View Fuel Stock Levels");
-            System.out.println("3. Record Tank Refill");
-            System.out.println("4. Perform Safety Check");
-            System.out.println("5. Generate Sales Report");
-            System.out.println("6. View Pump Status");
-            System.out.println("7. Check Tire Pressure");
+            System.out.println("1. Start New Refueling (Customer)");
+            System.out.println("2. Check Tire Pressure (Customer)");
+            System.out.println("3. View Fuel Stock Levels (Stock System)");
+            System.out.println("4. View Pump Status (Pump System)");
+            System.out.println("5. Record Tank Refill (Fuel Supplier)");
+            System.out.println("6. Perform Safety Check (Safety System)");
+            System.out.println("7. Generate Sales Report (Manager)");
             System.out.println("8. Return to Main Menu");
             System.out.print("Choose an option: ");
             
@@ -41,17 +41,17 @@ public class GasStationSystem {
 
             switch (choice) {
                 case 1: processRefueling(); break;
-                case 2: viewFuelStock(); break;
-                case 3: recordTankRefill(); break;
-                case 4: performSafetyCheck(); break;
-                case 5: 
+                case 2: checkTirePressure(); break;
+                case 3: viewFuelStock(); break;
+                case 4: viewPumpStatus(); break;
+                case 5: recordTankRefill(); break;
+                case 6: performSafetyCheck(); break;
+                case 7: 
                     analyticsService.generateSalesReport(); 
                     System.out.println("\nSales report generated successfully!");
                     System.out.println("Location: ./src/main/java/store/data/" + storeId + "_gas_sales_" + 
                         LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + ".txt");
                     break;
-                case 6: viewPumpStatus(); break;
-                case 7: checkTirePressure(); break;
                 case 8: return;
                 default: System.out.println("Invalid option");
             }

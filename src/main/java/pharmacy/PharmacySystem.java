@@ -24,11 +24,11 @@ public class PharmacySystem {
     public void start() {
         while (true) {
             System.out.println("\nPharmacy Management System");
-            System.out.println("1. Process Prescription");
-            System.out.println("2. View Medication Inventory");
-            System.out.println("3. Record Inventory Restock");
-            System.out.println("4. Process OTC Purchase");
-            System.out.println("5. Generate Inventory Report");
+            System.out.println("1. Process Prescription (Pharmacist)");
+            System.out.println("2. View Medication Inventory (Staff)");
+            System.out.println("3. Record Inventory Restock (Inventory Manager)");
+            System.out.println("4. Process OTC Purchase (Staff)");
+            System.out.println("5. Generate Inventory Report (Pharmacy Manager)");
             System.out.println("6. Return to Main Menu");
             System.out.print("Choose an option: ");
             
