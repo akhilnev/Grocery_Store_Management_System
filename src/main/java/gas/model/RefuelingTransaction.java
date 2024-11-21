@@ -2,6 +2,12 @@ package gas.model;
 
 import java.time.LocalDateTime;
 
+/**
+ * Model class representing a fuel transaction at the gas station.
+ * Tracks transaction details including pump usage, fuel type, and payment.
+ *
+ * @author Hrishikesha Kyathsandra
+ */
 public class RefuelingTransaction {
     private String transactionId;
     private int pumpNumber;
@@ -10,6 +16,15 @@ public class RefuelingTransaction {
     private double amount;
     private LocalDateTime timestamp;
 
+    /**
+     * Creates a new refueling transaction with the specified details.
+     * Automatically calculates total amount based on fuel price.
+     *
+     * @param transactionId Unique identifier for the transaction
+     * @param pumpNumber Number of the pump used
+     * @param fuelType Type of fuel dispensed
+     * @param gallons Quantity of fuel dispensed
+     */
     public RefuelingTransaction(String transactionId, int pumpNumber, 
                               FuelType fuelType, double gallons) {
         this.transactionId = transactionId;

@@ -1,5 +1,11 @@
 package gas.model;
 
+/**
+ * Enumeration of available fuel types with their properties.
+ * Defines fuel grades, octane ratings, and pricing.
+ *
+ * @author Hrishikesha Kyathsandra
+ */
 public enum FuelType {
     REGULAR_87("Regular", 87, 3.49),
     PLUS_89("Plus", 89, 3.79),

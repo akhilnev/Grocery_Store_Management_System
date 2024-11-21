@@ -5,6 +5,12 @@ import java.util.*;
 import java.io.*;
 import java.time.LocalDateTime;
 
+/**
+ * Service class managing core gas station operations and data.
+ * Handles fuel inventory, pump status, and transaction processing.
+ *
+ * @author Hrishikesha Kyathsandra
+ */
 public class GasStationManager {
     private Map<Integer, PumpStatus> pumps;
     private Map<FuelType, Double> fuelStock;

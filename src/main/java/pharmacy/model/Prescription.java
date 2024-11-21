@@ -1,3 +1,9 @@
+/**
+ * Model class representing a medical prescription.
+ * Contains prescription details, patient information, and medication instructions.
+ *
+ * @author Hrishikesha Kyathsandra
+ */
 package pharmacy.model;
 
 import java.time.LocalDateTime;

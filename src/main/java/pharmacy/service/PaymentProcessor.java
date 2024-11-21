@@ -1,5 +1,16 @@
 package pharmacy.service;
 
+/**
+ * Service class for processing various types of payments in the pharmacy.
+ * Handles insurance claims, cash transactions, and card payments.
+ *
+ * @author Hrishikesha Kyathsandra
+ */
+
+/**
+ * Processes different payment methods for pharmacy transactions.
+ * Supports insurance verification, cash handling, and card processing.
+ */
 public class PaymentProcessor {
     public boolean processPayment(String paymentMethod, double amount) {
         System.out.printf("\nProcessing %s payment of $%.2f\n", paymentMethod, amount);
