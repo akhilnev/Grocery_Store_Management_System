@@ -6,6 +6,12 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
+/**
+ * Service class for generating and managing gas station analytics.
+ * Handles sales reports and operational statistics.
+ *
+ * @author Hrishikesha Kyathsandra
+ */
 public class GasAnalyticsService {
     private GasStationManager gasManager;
     private String storeId;

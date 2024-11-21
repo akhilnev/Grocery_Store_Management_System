@@ -8,6 +8,12 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Random;
 
+/**
+ * Main system class for managing automated gas station operations.
+ * Handles customer self-service, system monitoring, and management functions.
+ *
+ * @author Hrishikesha Kyathsandra
+ */
 public class GasStationSystem {
     private GasStationManager gasManager;
     private PaymentProcessor paymentProcessor;
@@ -15,6 +21,10 @@ public class GasStationSystem {
     private String storeId;
     private GasAnalyticsService analyticsService;
 
+    /**
+     * Initializes the gas station system with required components.
+     * @param storeId Unique identifier for the gas station
+     */
     public GasStationSystem(String storeId) {
         this.storeId = storeId;
         this.gasManager = new GasStationManager(storeId);
@@ -23,6 +33,10 @@ public class GasStationSystem {
         this.scanner = new Scanner(System.in);
     }
 
+    /**
+     * Starts the main system interface and handles user interactions.
+     * Provides options for customer self-service and system management.
+     */
     public void start() {
         while (true) {
             System.out.println("\nGas Station Management System");
@@ -58,6 +72,10 @@ public class GasStationSystem {
         }
     }
 
+    /**
+     * Processes a new refueling transaction.
+     * Handles pump selection, payment, and fuel dispensing.
+     */
     private void processRefueling() {
         System.out.print("Enter pump number (1-8): ");
         int pumpNumber = scanner.nextInt();

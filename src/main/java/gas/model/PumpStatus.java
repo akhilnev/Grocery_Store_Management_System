@@ -3,6 +3,12 @@ package gas.model;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
+/**
+ * Model class representing the status and maintenance state of a fuel pump.
+ * Tracks operational status, usage, and maintenance requirements.
+ *
+ * @author Hrishikesha Kyathsandra
+ */
 public class PumpStatus {
     private int pumpNumber;
     private boolean operational;
