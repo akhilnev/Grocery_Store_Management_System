@@ -5,6 +5,7 @@ import headoffice.HeadOfficeManagementSystem;
 import inventory.InventoryManagementSystem;
 import java.util.Scanner;
 import lostandfound.service.LostFoundManager;
+import loyalty.LoyaltySystem;
 import maintenance.MaintenanceSystem;
 import marketing.service.MarketingManager;
 import order.OrderManagementSystem;
@@ -49,8 +50,9 @@ public class Main {
             System.out.println("13. Head Office Management (Head Office Manager)");
             System.out.println("14. Store Performance Analytics (Head Office Manager)");
             System.out.println("15. Lost and Found Management (Customer Service)");
-            System.out.println("16. Change Store");
-            System.out.println("17. Exit");
+            System.out.println("16. Loyalty Program Management (Store Cashier)");
+            System.out.println("17. Change Store");
+            System.out.println("18. Exit");
             System.out.print("Choose a use case: ");
 
             int choice = scanner.nextInt();
@@ -103,9 +105,12 @@ public class Main {
                     new LostFoundManager().startLostFoundManagement();
                     break;
                 case 16:
-                    storeId = null;
+                    new LoyaltySystem(storeId).start();
                     break;
                 case 17:
+                    storeId = null;
+                    break;
+                case 18:
                     System.out.println("Exiting...");
                     return;
                 default:
