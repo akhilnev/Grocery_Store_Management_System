@@ -1,3 +1,9 @@
+/**
+ * Service class for generating and managing pharmacy analytics.
+ * Handles inventory reports and prescription statistics.
+ *
+ * @author Hrishikesha Kyathsandra
+ */
 package pharmacy.service;
 
 import pharmacy.model.*;

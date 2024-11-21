@@ -1,3 +1,9 @@
+/**
+ * Model class representing a medication in the pharmacy inventory.
+ * Tracks medication details, stock levels, and pricing information.
+ *
+ * @author Hrishikesha Kyathsandra
+ */
 package pharmacy.model;
 
 import java.time.LocalDateTime;

@@ -1,3 +1,9 @@
+/**
+ * Main system class for managing pharmacy operations.
+ * Handles prescription processing, inventory management, and reporting.
+ *
+ * @author Hrishikesha Kyathsandra
+ */
 package pharmacy;
 
 import pharmacy.model.*;
@@ -6,6 +12,10 @@ import java.util.Scanner;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Controls the main operations of a pharmacy system.
+ * Manages prescriptions, medication inventory, and OTC sales.
+ */
 public class PharmacySystem {
     private PharmacyManager pharmacyManager;
     private PaymentProcessor paymentProcessor;

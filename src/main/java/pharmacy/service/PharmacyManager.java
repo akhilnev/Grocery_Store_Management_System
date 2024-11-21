@@ -1,3 +1,9 @@
+/**
+ * Service class managing core pharmacy operations and data.
+ * Handles medication inventory, prescriptions, and stock management.
+ *
+ * @author Hrishikesha Kyathsandra
+ */
 package pharmacy.service;
 
 import pharmacy.model.*;
