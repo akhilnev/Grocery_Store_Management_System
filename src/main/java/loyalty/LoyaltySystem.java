@@ -2,6 +2,7 @@ package loyalty;
 
 import java.util.Scanner;
 import loyalty.service.LoyaltyManager;
+import java.util.Map;
 
 public class LoyaltySystem {
     private final LoyaltyManager loyaltyManager;
@@ -21,7 +22,8 @@ public class LoyaltySystem {
             System.out.println("2. Add Points");
             System.out.println("3. Redeem Points");
             System.out.println("4. Check Balance");
-            System.out.println("5. Back to Main Menu");
+            System.out.println("5. View All Members");
+            System.out.println("6. Back to Main Menu");
             System.out.print("Choose an option: ");
 
             int choice = scanner.nextInt();
@@ -32,7 +34,8 @@ public class LoyaltySystem {
                 case 2: addPoints(); break;
                 case 3: redeemPoints(); break;
                 case 4: checkBalance(); break;
-                case 5: return;
+                case 5: viewAllMembers(); break;
+                case 6: return;
                 default: System.out.println("Invalid option");
             }
         }
@@ -89,6 +92,18 @@ public class LoyaltySystem {
             System.out.printf("Equivalent to: $%.2f in discounts%n", points / 300.0 * 10.0);
         } else {
             System.out.println("Member not found.");
+        }
+    }
+
+    private void viewAllMembers() {
+        Map<String, Integer> members = loyaltyManager.getAllMembers();
+        if (members.isEmpty()) {
+            System.out.println("No members found.");
+        } else {
+            System.out.println("Members and their points:");
+            for (Map.Entry<String, Integer> entry : members.entrySet()) {
+                System.out.printf("Phone: %s, Name: %s, Points: %d%n", entry.getKey(), loyaltyManager.getNames().get(entry.getKey()), entry.getValue());
+            }
         }
     }
 } 

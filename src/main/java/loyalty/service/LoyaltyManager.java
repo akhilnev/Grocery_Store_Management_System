@@ -1,8 +1,8 @@
 package loyalty.service;
 
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
-import java.io.*;
 
 public class LoyaltyManager {
     private Map<String, Integer> memberPoints;
@@ -49,6 +49,14 @@ public class LoyaltyManager {
 
     public int getPoints(String phone) {
         return memberPoints.getOrDefault(phone, -1);
+    }
+
+    public Map<String, Integer> getAllMembers() {
+        return new HashMap<>(memberPoints);
+    }
+
+    public Map<String, String> getNames() {
+        return new HashMap<>(memberNames);
     }
 
     private void loadMemberData() {
