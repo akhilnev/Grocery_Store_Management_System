@@ -4,6 +4,7 @@ import gas.model.*;
 import java.util.*;
 import java.io.*;
 import java.time.LocalDateTime;
+import java.util.stream.Collectors;
 
 /**
  * Service class managing core gas station operations and data.
@@ -17,6 +18,8 @@ public class GasStationManager {
     private Map<String, RefuelingTransaction> transactions;
     private String storeId;
     private static final double MINIMUM_STOCK_LEVEL = 500.0; // gallons
+    private Map<String, FuelSupplier> suppliers;
+    private Map<String, FuelOrder> fuelOrders;
 
     public GasStationManager(String storeId) {
         this.storeId = storeId;
@@ -25,6 +28,9 @@ public class GasStationManager {
         this.transactions = new HashMap<>();
         initializePumps();
         loadFuelStock();
+        this.suppliers = new HashMap<>();
+        this.fuelOrders = new HashMap<>();
+        initializeSuppliers();
     }
 
     private void initializePumps() {
@@ -140,5 +146,54 @@ public class GasStationManager {
 
     public Map<String, RefuelingTransaction> getTodayTransactions() {
         return transactions;
+    }
+
+    private void initializeSuppliers() {
+        suppliers.put("SUP1", new FuelSupplier("SUP1", "PetroMax Fuels", "555-0101"));
+        suppliers.put("SUP2", new FuelSupplier("SUP2", "Global Gas Supply", "555-0102"));
+        suppliers.put("SUP3", new FuelSupplier("SUP3", "EcoFuel Distributors", "555-0103"));
+    }
+
+    public List<FuelSupplier> getAvailableSuppliers() {
+        return suppliers.values().stream()
+                .filter(FuelSupplier::isAvailable)
+                .collect(Collectors.toList());
+    }
+
+    public FuelOrder createFuelOrder(String supplierId, FuelType fuelType, double gallons) {
+        String orderId = "FUEL" + System.currentTimeMillis();
+        FuelOrder order = new FuelOrder(orderId, supplierId, fuelType, gallons);
+        fuelOrders.put(orderId, order);
+        return order;
+    }
+
+    public List<FuelOrder> getPendingOrders() {
+        return fuelOrders.values().stream()
+                .filter(order -> order.getStatus().equals("PENDING"))
+                .collect(Collectors.toList());
+    }
+
+    public void updateOrderStatus(String orderId, String newStatus) {
+        FuelOrder order = fuelOrders.get(orderId);
+        if (order != null) {
+            order.setStatus(newStatus);
+            if (newStatus.equals("DELIVERED")) {
+                order.setDeliveryDate(LocalDateTime.now());
+            }
+        }
+    }
+
+    public void receiveFuelDelivery(String orderId, double gallonsReceived) {
+        FuelOrder order = fuelOrders.get(orderId);
+        if (order != null) {
+            order.setGallonsReceived(gallonsReceived);
+            order.setStatus("DELIVERED");
+            order.setDeliveryDate(LocalDateTime.now());
+            refillTank(order.getFuelType(), gallonsReceived);
+            System.out.println("Fuel delivery processed: " + gallonsReceived + 
+                " gallons of " + order.getFuelType().getName());
+        } else {
+            System.out.println("Order not found: " + orderId);
+        }
     }
 }

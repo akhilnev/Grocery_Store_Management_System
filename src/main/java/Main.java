@@ -1,20 +1,25 @@
-import inventory.InventoryManagementSystem;
-import order.OrderManagementSystem;
-import store.model.Store;
-import store.service.StoreManager;
-import security.service.SecurityManager;
 import assistance.service.CustomerAssistanceManager;
-import marketing.service.MarketingManager;
+import employee.PayrollSystem;
+import gas.GasStationSystem;
+import headoffice.HeadOfficeManagementSystem;
+import inventory.InventoryManagementSystem;
 import java.util.Scanner;
-import supplier.SupplierManagementSystem;
+import lostandfound.service.LostFoundManager;
+import loyalty.LoyaltySystem;
+import maintenance.MaintenanceSystem;
+import marketing.service.MarketingManager;
+import order.OrderManagementSystem;
+import pharmacy.PharmacySystem;
 import report.SalesReportSystem;
 import returns.ReturnManagementSystem;
-import employee.PayrollSystem;
-import maintenance.MaintenanceSystem;
-import headoffice.HeadOfficeManagementSystem;
-import headoffice.StorePerformanceSystem;
-import gas.GasStationSystem;
-import pharmacy.PharmacySystem;
+import security.service.SecurityManager;
+import store.model.Store;
+import store.service.StoreManager;
+import supplier.SupplierManagementSystem;
+import checkout.service.CheckoutManager;
+import delivery.service.DeliveryManager;
+import donation.service.DonationManager;
+import parking.service.ParkingManager;
 
 public class Main {
     private static StoreManager storeManager = new StoreManager();
@@ -48,8 +53,14 @@ public class Main {
             System.out.println("12. Pharmacy Management (Pharmacy Technician)");
             System.out.println("13. Head Office Management (Head Office Manager)");
             System.out.println("14. Store Performance Analytics (Head Office Manager)");
-            System.out.println("15. Change Store");
-            System.out.println("16. Exit");
+            System.out.println("15. Lost and Found Management (Customer Service)");
+            System.out.println("16. Loyalty Program Management (Store Cashier)");
+            System.out.println("17. Self-Checkout Management (Checkout Supervisor)");
+            System.out.println("18. Delivery Management (Delivery Manager)");
+            System.out.println("19. Donation Management (Community Manager)");
+            System.out.println("20. Parking Management (Parking Supervisor)");
+            System.out.println("21. Change Store");
+            System.out.println("22. Exit");
             System.out.print("Choose a use case: ");
 
             int choice = scanner.nextInt();
@@ -99,9 +110,27 @@ public class Main {
                     headOfficeManagementSystem.viewStorePerformance();
                     break;
                 case 15:
-                    storeId = null; // Trigger store selection in next loop
+                    new LostFoundManager().startLostFoundManagement();
                     break;
                 case 16:
+                    new LoyaltySystem(storeId).start();
+                    break;
+                case 17:
+                    new CheckoutManager().startCheckoutManagement();
+                    break;
+                case 18:
+                    new DeliveryManager().startDeliveryManagement();
+                    break;
+                case 19:
+                    new DonationManager().startDonationManagement();
+                    break;
+                case 20:
+                    new ParkingManager().startParkingManagement();
+                    break;
+                case 21:
+                    storeId = null;
+                    break;
+                case 22:
                     System.out.println("Exiting...");
                     return;
                 default:
