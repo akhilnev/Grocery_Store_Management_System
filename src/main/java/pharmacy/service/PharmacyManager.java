@@ -10,12 +10,16 @@ import pharmacy.model.*;
 import java.util.*;
 import java.io.*;
 import java.time.LocalDateTime;
+import java.util.stream.Collectors;
 
 public class PharmacyManager {
     private Map<String, Medication> medicationInventory;
     private Map<String, Prescription> prescriptions;
     private String storeId;
     private static final int MINIMUM_STOCK_LEVEL = 10;
+    private Map<String, MedicineSupplier> suppliers;
+    private Map<String, MedicineOrder> medicineOrders;
+    private List<Medicine> medicines;
 
     public PharmacyManager(String storeId) {
         this.storeId = storeId;
@@ -23,6 +27,11 @@ public class PharmacyManager {
         this.prescriptions = new HashMap<>();
         loadInitialInventory();
         loadPrescriptions();
+        this.suppliers = new HashMap<>();
+        this.medicineOrders = new HashMap<>();
+        initializeSuppliers();
+        this.medicines = new ArrayList<>();
+        initializeMedicines();
     }
 
     private void loadInitialInventory() {
@@ -158,5 +167,78 @@ public class PharmacyManager {
 
     public Prescription getPrescription(String prescriptionId) {
         return prescriptions.get(prescriptionId);
+    }
+
+    private void initializeSuppliers() {
+        suppliers.put("PHARM1", new MedicineSupplier("PHARM1", "MediCorp Supplies", "555-0201", "LIC123456"));
+        suppliers.put("PHARM2", new MedicineSupplier("PHARM2", "HealthCare Distributors", "555-0202", "LIC789012"));
+        suppliers.put("PHARM3", new MedicineSupplier("PHARM3", "PharmaTech Solutions", "555-0203", "LIC345678"));
+    }
+
+    public List<MedicineSupplier> getAvailableSuppliers() {
+        return suppliers.values().stream()
+                .filter(MedicineSupplier::isAvailable)
+                .collect(Collectors.toList());
+    }
+
+    public MedicineOrder createMedicineOrder(String supplierId, Medicine medicine, int quantity) {
+        String orderId = "MED" + System.currentTimeMillis();
+        MedicineOrder order = new MedicineOrder(orderId, supplierId, medicine, quantity);
+        medicineOrders.put(orderId, order);
+        return order;
+    }
+
+    public List<MedicineOrder> getPendingOrders() {
+        return medicineOrders.values().stream()
+                .filter(order -> order.getStatus().equals("PENDING"))
+                .collect(Collectors.toList());
+    }
+
+    public void updateOrderStatus(String orderId, String newStatus) {
+        MedicineOrder order = medicineOrders.get(orderId);
+        if (order != null) {
+            order.setStatus(newStatus);
+            if (newStatus.equals("DELIVERED")) {
+                order.setDeliveryDate(LocalDateTime.now());
+            }
+        }
+    }
+
+    public void receiveMedicineDelivery(String orderId, int quantityReceived) {
+        MedicineOrder order = medicineOrders.get(orderId);
+        if (order != null) {
+            order.setQuantityReceived(quantityReceived);
+            order.setStatus("DELIVERED");
+            order.setDeliveryDate(LocalDateTime.now());
+            
+            // Find and update the medicine in the main inventory
+            Medicine orderMedicine = order.getMedicine();
+            for (Medicine med : medicines) {
+                if (med.getMedicineId().equals(orderMedicine.getMedicineId())) {
+                    med.setQuantity(med.getQuantity() + quantityReceived);
+                    break;
+                }
+            }
+            
+            System.out.println("Medicine delivery processed: " + quantityReceived + 
+                " units of " + orderMedicine.getName());
+        } else {
+            System.out.println("Order not found: " + orderId);
+        }
+    }
+
+    private void initializeMedicines() {
+        medicines.add(new Medicine("MED001", "Aspirin", "Pain reliever", 9.99, 100, 
+            "Bayer", "Pain Relief", false));
+        medicines.add(new Medicine("MED002", "Amoxicillin", "Antibiotic", 24.99, 50, 
+            "Pfizer", "Antibiotics", true));
+        medicines.add(new Medicine("MED003", "Lisinopril", "Blood pressure medication", 19.99, 75, 
+            "Merck", "Cardiovascular", true));
+        medicines.add(new Medicine("MED004", "Ibuprofen", "Pain reliever", 7.99, 150, 
+            "Advil", "Pain Relief", false));
+    }
+
+    public List<Medicine> getAllMedicines() {
+        return new ArrayList<>(medicines);
     }
 }

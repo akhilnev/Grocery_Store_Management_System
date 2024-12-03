@@ -11,6 +11,7 @@ import pharmacy.service.*;
 import java.util.Scanner;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 /**
  * Controls the main operations of a pharmacy system.
@@ -36,7 +37,7 @@ public class PharmacySystem {
             System.out.println("\nPharmacy Management System");
             System.out.println("1. Process Prescription (Pharmacist)");
             System.out.println("2. View Medication Inventory (Staff)");
-            System.out.println("3. Record Inventory Restock (Inventory Manager)");
+            System.out.println("3. Pharmacy Supply Management (Supply Chain)");
             System.out.println("4. Process OTC Purchase (Staff)");
             System.out.println("5. Generate Inventory Report (Pharmacy Manager)");
             System.out.println("6. Return to Main Menu");
@@ -48,7 +49,7 @@ public class PharmacySystem {
             switch (choice) {
                 case 1: processPrescription(); break;
                 case 2: viewInventory(); break;
-                case 3: recordRestock(); break;
+                case 3: recordInventoryRestock(); break;
                 case 4: processOTCPurchase(); break;
                 case 5: generateReport(); break;
                 case 6: return;
@@ -119,23 +120,124 @@ public class PharmacySystem {
         }
     }
 
-    private void recordRestock() {
-        System.out.println("\nRecord Medication Restock");
-        System.out.print("Enter medication ID: ");
-        String medicationId = scanner.nextLine();
+    private void recordInventoryRestock() {
+        while (true) {
+            System.out.println("\nPharmacy Inventory Management");
+            System.out.println("1. Place New Order");
+            System.out.println("2. View Pending Orders");
+            System.out.println("3. Receive Medicine Delivery");
+            System.out.println("4. View Current Inventory");
+            System.out.println("5. Return to Main Menu");
+            System.out.print("Choose an option: ");
+
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (choice) {
+                case 1:
+                    placeMedicineOrder();
+                    break;
+                case 2:
+                    viewPendingOrders();
+                    break;
+                case 3:
+                    receiveMedicineDelivery();
+                    break;
+                case 4:
+                    viewInventory();
+                    break;
+                case 5:
+                    return;
+                default:
+                    System.out.println("Invalid option");
+            }
+        }
+    }
+
+    private void placeMedicineOrder() {
+        System.out.println("\nAvailable Suppliers:");
+        List<MedicineSupplier> suppliers = pharmacyManager.getAvailableSuppliers();
+        for (int i = 0; i < suppliers.size(); i++) {
+            MedicineSupplier supplier = suppliers.get(i);
+            System.out.printf("%d. %s (License: %s)%n", 
+                i + 1, supplier.getName(), supplier.getLicenseNumber());
+        }
         
-        System.out.print("Enter quantity received: ");
-        int quantity = scanner.nextInt();
+        System.out.print("Select supplier (1-" + suppliers.size() + "): ");
+        int supplierChoice = scanner.nextInt();
         scanner.nextLine();
         
-        System.out.print("Enter expiration date (YYYY-MM-DD): ");
-        String expirationDate = scanner.nextLine();
-        
-        if (pharmacyManager.recordRestock(medicationId, quantity, expirationDate)) {
-            System.out.println("Restock recorded successfully");
-        } else {
-            System.out.println("Failed to record restock");
+        if (supplierChoice < 1 || supplierChoice > suppliers.size()) {
+            System.out.println("Invalid supplier selection");
+            return;
         }
+
+        System.out.println("\nAvailable Medicines:");
+        List<Medicine> medicines = pharmacyManager.getAllMedicines();
+        for (int i = 0; i < medicines.size(); i++) {
+            Medicine med = medicines.get(i);
+            System.out.printf("%d. %s (Current Stock: %d)%n", 
+                i + 1, med.getName(), med.getQuantity());
+        }
+
+        System.out.print("Select medicine to order (1-" + medicines.size() + "): ");
+        int medicineChoice = scanner.nextInt();
+        scanner.nextLine();
+
+        if (medicineChoice < 1 || medicineChoice > medicines.size()) {
+            System.out.println("Invalid medicine selection");
+            return;
+        }
+
+        System.out.print("Enter quantity to order: ");
+        int quantity = scanner.nextInt();
+        scanner.nextLine();
+
+        MedicineSupplier supplier = suppliers.get(supplierChoice - 1);
+        Medicine medicine = medicines.get(medicineChoice - 1);
+        
+        MedicineOrder order = pharmacyManager.createMedicineOrder(
+            supplier.getSupplierId(), medicine, quantity);
+        
+        System.out.println("\nOrder placed successfully!");
+        System.out.println("Order ID: " + order.getOrderId());
+        System.out.println("Total Cost: $" + order.getOrderTotal());
+        System.out.println("Status: " + order.getStatus());
+    }
+
+    private void viewPendingOrders() {
+        System.out.println("\nPending Medicine Orders");
+        System.out.println("--------------------------------------------------");
+        List<MedicineOrder> pendingOrders = pharmacyManager.getPendingOrders();
+        
+        if (pendingOrders.isEmpty()) {
+            System.out.println("No pending orders found.");
+            return;
+        }
+
+        for (MedicineOrder order : pendingOrders) {
+            System.out.printf("Order ID: %s%n", order.getOrderId());
+            System.out.printf("Medicine: %s%n", order.getMedicine().getName());
+            System.out.printf("Quantity Ordered: %d%n", order.getQuantityOrdered());
+            System.out.printf("Order Total: $%.2f%n", order.getOrderTotal());
+            System.out.printf("Order Date: %s%n", 
+                order.getOrderDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+            System.out.printf("Status: %s%n", order.getStatus());
+            System.out.println("--------------------------------------------------");
+        }
+    }
+
+    private void receiveMedicineDelivery() {
+        System.out.println("\nReceive Medicine Delivery");
+        System.out.print("Enter Order ID: ");
+        String orderId = scanner.nextLine();
+
+        System.out.print("Enter received quantity: ");
+        int quantityReceived = scanner.nextInt();
+        scanner.nextLine();
+
+        pharmacyManager.receiveMedicineDelivery(orderId, quantityReceived);
+        System.out.println("Delivery recorded successfully!");
     }
 
     private void generateReport() {
@@ -168,15 +270,16 @@ public class PharmacySystem {
     private void viewInventory() {
         System.out.println("\nCurrent Medication Inventory");
         System.out.println("--------------------------------------------------");
-        System.out.printf("%-15s %-20s %-10s %-10s%n", 
-            "ID", "Name", "Stock", "Type");
+        System.out.printf("%-15s %-20s %-10s %-15s %-10s%n", 
+            "ID", "Name", "Stock", "Category", "Price");
         
-        for (Medication med : pharmacyManager.getAllMedications()) {
-            System.out.printf("%-15s %-20s %-10d %-10s%n",
-                med.getMedicationId(),
+        for (Medicine med : pharmacyManager.getAllMedicines()) {
+            System.out.printf("%-15s %-20s %-10d %-15s $%-9.2f%n",
+                med.getMedicineId(),
                 med.getName(),
-                med.getStockLevel(),
-                med.getType());
+                med.getQuantity(),
+                med.getCategory(),
+                med.getPrice());
         }
     }
 
