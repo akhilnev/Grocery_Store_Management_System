@@ -76,7 +76,6 @@ public class PharmacySystem {
         System.out.println("Quantity: " + prescription.getQuantity());
         System.out.println("Instructions: " + prescription.getInstructions());
         System.out.println("Doctor: " + prescription.getDoctorName());
-        System.out.println("Insurance: " + prescription.getInsuranceProvider());
         System.out.printf("Price: $%.2f%n", prescription.getPrice());
 
         System.out.print("\nPharmacist verification required. Approve? (yes/no): ");
@@ -101,22 +100,95 @@ public class PharmacySystem {
             return;
         }
 
-        // Check medication stock
         if (!pharmacyManager.hasSufficientStock(medicationId, prescription.getQuantity())) {
             System.out.println("Insufficient medication stock");
             return;
         }
 
-        // Process payment
-        System.out.println("\nProcessing insurance payment...");
-        if (processPayment(1, prescription.getPrice())) {
+        // Payment Processing
+        System.out.println("\nSelect Payment Method:");
+        System.out.println("1. Insurance");
+        System.out.println("2. Cash");
+        System.out.println("3. Card");
+        System.out.print("Choose payment method: ");
+        
+        int paymentChoice = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+        
+        boolean paymentSuccess = false;
+        String[] paymentDetails;
+        
+        switch (paymentChoice) {
+            case 1:
+                System.out.println("\nAvailable Insurance Providers:");
+                System.out.println("1. BlueCross BlueShield");
+                System.out.println("2. Aetna");
+                System.out.println("3. UnitedHealthcare");
+                System.out.println("4. Cigna");
+                System.out.println("5. Other");
+                System.out.print("Select insurance provider: ");
+                
+                int providerChoice = scanner.nextInt();
+                scanner.nextLine();
+                
+                System.out.print("Enter insurance member ID: ");
+                String memberId = scanner.nextLine();
+                
+                System.out.println("\nVerifying insurance coverage...");
+                paymentSuccess = paymentProcessor.processPayment(
+                    "INSURANCE",
+                    prescription.getPrice(),
+                    memberId,
+                    prescription.getMedicationName()
+                );
+                break;
+                
+            case 2:
+                System.out.printf("Total amount due: $%.2f%n", prescription.getPrice());
+                System.out.print("Enter amount received: $");
+                double cashReceived = scanner.nextDouble();
+                scanner.nextLine();
+                
+                if (cashReceived >= prescription.getPrice()) {
+                    double change = cashReceived - prescription.getPrice();
+                    System.out.printf("Change due: $%.2f%n", change);
+                    paymentSuccess = paymentProcessor.processPayment("CASH", prescription.getPrice());
+                } else {
+                    System.out.println("Insufficient payment amount");
+                }
+                break;
+                
+            case 3:
+                System.out.print("Enter card number: ");
+                String cardNumber = scanner.nextLine();
+                
+                System.out.print("Enter expiration date (MM/YY): ");
+                String expDate = scanner.nextLine();
+                
+                System.out.print("Enter CVV: ");
+                String cvv = scanner.nextLine();
+                
+                paymentSuccess = paymentProcessor.processPayment(
+                    "CARD",
+                    prescription.getPrice(),
+                    cardNumber,
+                    expDate,
+                    cvv
+                );
+                break;
+                
+            default:
+                System.out.println("Invalid payment method selected");
+        }
+
+        if (paymentSuccess) {
             pharmacyManager.updateStock(medicationId, prescription.getQuantity());
             System.out.println("\nPrescription filled successfully!");
             System.out.println("Please provide usage instructions to the patient:");
             System.out.println("- " + prescription.getInstructions());
             System.out.println("- " + pharmacyManager.getMedication(medicationId).getWarnings());
         } else {
-            System.out.println("Payment processing failed. Please verify insurance information.");
+            System.out.println("Payment processing failed. Please try again.");
         }
     }
 
@@ -307,15 +379,55 @@ public class PharmacySystem {
         System.out.printf("Total amount: $%.2f%n", amount);
 
         System.out.println("\nSelect payment method:");
-        System.out.println("1. Insurance");
-        System.out.println("2. Cash");
-        System.out.println("3. Card");
+        System.out.println("1. Cash");
+        System.out.println("2. Card");
         System.out.print("Choose an option: ");
         
         int paymentChoice = scanner.nextInt();
         scanner.nextLine();
 
-        if (processPayment(paymentChoice, amount)) {
+        boolean paymentSuccess = false;
+        
+        switch (paymentChoice) {
+            case 1:
+                System.out.printf("Total amount due: $%.2f%n", amount);
+                System.out.print("Enter amount received: $");
+                double cashReceived = scanner.nextDouble();
+                scanner.nextLine();
+                
+                if (cashReceived >= amount) {
+                    double change = cashReceived - amount;
+                    System.out.printf("Change due: $%.2f%n", change);
+                    paymentSuccess = paymentProcessor.processPayment("CASH", amount);
+                } else {
+                    System.out.println("Insufficient payment amount");
+                }
+                break;
+                
+            case 2:
+                System.out.print("Enter card number: ");
+                String cardNumber = scanner.nextLine();
+                
+                System.out.print("Enter expiration date (MM/YY): ");
+                String expDate = scanner.nextLine();
+                
+                System.out.print("Enter CVV: ");
+                String cvv = scanner.nextLine();
+                
+                paymentSuccess = paymentProcessor.processPayment(
+                    "CARD",
+                    amount,
+                    cardNumber,
+                    expDate,
+                    cvv
+                );
+                break;
+                
+            default:
+                System.out.println("Invalid payment method selected");
+        }
+
+        if (paymentSuccess) {
             pharmacyManager.updateStock(medicationId, quantity);
             System.out.println("Purchase completed successfully!");
         } else {
