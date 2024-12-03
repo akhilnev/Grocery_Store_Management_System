@@ -7,6 +7,7 @@ import java.util.Scanner;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Random;
+import java.util.List;
 
 /**
  * Main system class for managing automated gas station operations.
@@ -44,7 +45,7 @@ public class GasStationSystem {
             System.out.println("2. Check Tire Pressure (Customer)");
             System.out.println("3. View Fuel Stock Levels (Stock System)");
             System.out.println("4. View Pump Status (Pump System)");
-            System.out.println("5. Record Tank Refill (Fuel Supplier)");
+            System.out.println("5. Fuel Inventory Management (Fuel Supplier)");
             System.out.println("6. Perform Safety Check (Safety System)");
             System.out.println("7. Generate Sales Report (Manager)");
             System.out.println("8. Return to Main Menu");
@@ -174,12 +175,61 @@ public class GasStationSystem {
     }
 
     private void recordTankRefill() {
-        System.out.println("\nRecord Tank Refill");
-        System.out.println("Select fuel type:");
+        while (true) {
+            System.out.println("\nFuel Tank Refill Management");
+            System.out.println("1. Place New Order");
+            System.out.println("2. View Pending Orders");
+            System.out.println("3. Receive Fuel Delivery");
+            System.out.println("4. View Fuel Stock Levels");
+            System.out.println("5. Return to Main Menu");
+            System.out.print("Choose an option: ");
+
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (choice) {
+                case 1:
+                    placeFuelOrder();
+                    break;
+                case 2:
+                    viewPendingOrders();
+                    break;
+                case 3:
+                    receiveFuelDelivery();
+                    break;
+                case 4:
+                    viewFuelStock();
+                    break;
+                case 5:
+                    return;
+                default:
+                    System.out.println("Invalid option");
+            }
+        }
+    }
+
+    private void placeFuelOrder() {
+        System.out.println("\nAvailable Suppliers:");
+        List<FuelSupplier> suppliers = gasManager.getAvailableSuppliers();
+        for (int i = 0; i < suppliers.size(); i++) {
+            FuelSupplier supplier = suppliers.get(i);
+            System.out.printf("%d. %s (%s)%n", i + 1, supplier.getName(), supplier.getContact());
+        }
+        
+        System.out.print("Select supplier (1-" + suppliers.size() + "): ");
+        int supplierChoice = scanner.nextInt();
+        scanner.nextLine();
+        
+        if (supplierChoice < 1 || supplierChoice > suppliers.size()) {
+            System.out.println("Invalid supplier selection");
+            return;
+        }
+
+        System.out.println("\nSelect fuel type:");
         System.out.println("1. Regular (87)");
         System.out.println("2. Plus (89)");
         System.out.println("3. Premium (93)");
-        
+        System.out.print("Choose fuel type: ");
         int fuelChoice = scanner.nextInt();
         scanner.nextLine();
 
@@ -187,9 +237,47 @@ public class GasStationSystem {
         double gallons = scanner.nextDouble();
         scanner.nextLine();
 
+        FuelSupplier supplier = suppliers.get(supplierChoice - 1);
         FuelType fuelType = FuelType.values()[fuelChoice - 1];
-        gasManager.refillTank(fuelType, gallons);
-        System.out.println("Tank refill recorded successfully");
+        
+        FuelOrder order = gasManager.createFuelOrder(supplier.getSupplierId(), fuelType, gallons);
+        System.out.println("\nOrder placed successfully!");
+        System.out.println("Order ID: " + order.getOrderId());
+        System.out.println("Status: " + order.getStatus());
+    }
+
+    private void viewPendingOrders() {
+        System.out.println("\nPending Fuel Orders");
+        System.out.println("--------------------------------------------------");
+        List<FuelOrder> pendingOrders = gasManager.getPendingOrders();
+        
+        if (pendingOrders.isEmpty()) {
+            System.out.println("No pending orders found.");
+            return;
+        }
+
+        for (FuelOrder order : pendingOrders) {
+            System.out.printf("Order ID: %s%n", order.getOrderId());
+            System.out.printf("Fuel Type: %s%n", order.getFuelType().getName());
+            System.out.printf("Gallons Ordered: %.2f%n", order.getGallonsOrdered());
+            System.out.printf("Order Date: %s%n", 
+                order.getOrderDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+            System.out.printf("Status: %s%n", order.getStatus());
+            System.out.println("--------------------------------------------------");
+        }
+    }
+
+    private void receiveFuelDelivery() {
+        System.out.println("\nReceive Fuel Delivery");
+        System.out.print("Enter Order ID: ");
+        String orderId = scanner.nextLine();
+
+        System.out.print("Enter received amount (gallons): ");
+        double gallonsReceived = scanner.nextDouble();
+        scanner.nextLine();
+
+        gasManager.receiveFuelDelivery(orderId, gallonsReceived);
+        System.out.println("Delivery recorded successfully!");
     }
 
     private void performSafetyCheck() {
@@ -300,8 +388,8 @@ public class GasStationSystem {
                 }
             }
 
-            System.out.printf("%n%nFinal reading: %d PSI%n", currentPSI);
-            System.out.printf("Recommended: %d PSI%n", recommendedPressure);
+            System.out.printf("%nFinal reading: %d PSI%n", currentPSI);
+            System.out.printf("Recommended: %.0f PSI%n", recommendedPressure);
             
             if (currentPSI < recommendedPressure) {
                 System.out.println("\nTire needs air. Adding air...");
