@@ -160,17 +160,28 @@ public class DeliveryManager {
                 int choice = Integer.parseInt(scanner.nextLine());
 
                 switch (choice) {
-                    case 1 -> viewDeliveries();
-                    case 2 -> createDelivery();
-                    case 3 -> updateDeliveryStatus();
-                    case 4 -> submitFeedback();
-                    case 5 -> viewFeedback();
-                    case 6 -> {
+                    case 1:
+                        viewDeliveries();
+                        break;
+                    case 2:
+                        createDelivery();
+                        break;
+                    case 3:
+                        updateDeliveryStatus();
+                        break;
+                    case 4:
+                        submitFeedback();
+                        break;
+                    case 5:
+                        viewFeedback();
+                        break;
+                    case 6:
                         saveDeliveries();
                         saveFeedbacks();
                         return;
-                    }
-                    default -> System.out.println("Invalid option");
+                    default:
+                        System.out.println("Invalid option");
+                        break;
                 }
             } catch (NumberFormatException e) {
                 System.out.println("Please enter a valid number");
@@ -269,12 +280,20 @@ public class DeliveryManager {
 
         try {
             int choice = Integer.parseInt(scanner.nextLine());
-            String newStatus = switch (choice) {
-                case 1 -> "PENDING";
-                case 2 -> "EN_ROUTE";
-                case 3 -> "DELIVERED";
-                default -> throw new IllegalArgumentException("Invalid status choice");
-            };
+            String newStatus;
+            switch (choice) {
+                case 1:
+                    newStatus = "PENDING";
+                    break;
+                case 2:
+                    newStatus = "EN_ROUTE";
+                    break;
+                case 3:
+                    newStatus = "DELIVERED";
+                    break;
+                default:
+                    throw new IllegalArgumentException("Invalid status choice");
+            }
 
             delivery.setStatus(newStatus);
             saveDeliveries();

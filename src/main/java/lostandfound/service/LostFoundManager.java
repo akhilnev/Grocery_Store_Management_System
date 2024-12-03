@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 import lostandfound.model.LostFoundItem;
 
 public class LostFoundManager {
@@ -156,13 +157,24 @@ public class LostFoundManager {
         int choice = scanner.nextInt();
         scanner.nextLine();
 
-        String newStatus = switch (choice) {
-            case 1 -> "Pending";
-            case 2 -> "Matched";
-            case 3 -> "Collected";
-            case 4 -> "Unclaimed";
-            default -> null;
-        };
+        String newStatus;
+        switch (choice) {
+            case 1:
+                newStatus = "Pending";
+                break;
+            case 2:
+                newStatus = "Matched";
+                break;
+            case 3:
+                newStatus = "Collected";
+                break;
+            case 4:
+                newStatus = "Unclaimed";
+                break;
+            default:
+                newStatus = null;
+                break;
+        }
 
         if (newStatus != null) {
             item.setStatus(newStatus);
@@ -180,7 +192,7 @@ public class LostFoundManager {
             .filter(item -> 
                 item.getDescription().toLowerCase().contains(search) ||
                 item.getLocation().toLowerCase().contains(search))
-            .toList();
+            .collect(Collectors.toList());
 
         if (found.isEmpty()) {
             System.out.println("No matching items found.");

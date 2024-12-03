@@ -156,12 +156,21 @@ public class DonationManager {
         int choice = scanner.nextInt();
         scanner.nextLine(); // Consume newline
 
-        String newStatus = switch (choice) {
-            case 1 -> "Pending";
-            case 2 -> "Active";
-            case 3 -> "Completed";
-            default -> null;
-        };
+        String newStatus;
+        switch (choice) {
+            case 1:
+                newStatus = "Pending";
+                break;
+            case 2:
+                newStatus = "Active";
+                break;
+            case 3:
+                newStatus = "Completed";
+                break;
+            default:
+                newStatus = null;
+                break;
+        }
 
         if (newStatus != null) {
             program.setStatus(newStatus);

@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDate;
+import java.util.stream.Collectors;
 
 public class CheckoutManager {
     private List<CheckoutStation> stations;
@@ -124,12 +125,21 @@ public class CheckoutManager {
         int choice = scanner.nextInt();
         scanner.nextLine(); // Consume newline
 
-        String newStatus = switch (choice) {
-            case 1 -> "Active";
-            case 2 -> "Inactive";
-            case 3 -> "Maintenance";
-            default -> null;
-        };
+        String newStatus;
+        switch (choice) {
+            case 1:
+                newStatus = "Active";
+                break;
+            case 2:
+                newStatus = "Inactive";
+                break;
+            case 3:
+                newStatus = "Maintenance";
+                break;
+            default:
+                newStatus = null;
+                break;
+        }
 
         if (newStatus != null) {
             station.setStatus(newStatus);
@@ -142,7 +152,7 @@ public class CheckoutManager {
     private void handleAgeVerification() {
         List<CheckoutStation> needVerification = stations.stream()
             .filter(s -> s.getTransactionStatus().equals("AgeVerification"))
-            .toList();
+            .collect(Collectors.toList());
 
         if (needVerification.isEmpty()) {
             System.out.println("No stations currently need age verification.");
@@ -167,7 +177,7 @@ public class CheckoutManager {
     private void manageCashLevels() {
         List<CheckoutStation> lowCash = stations.stream()
             .filter(s -> s.getCashLevel().equals("Low"))
-            .toList();
+            .collect(Collectors.toList());
 
         if (lowCash.isEmpty()) {
             System.out.println("All stations have normal cash levels.");
@@ -191,7 +201,7 @@ public class CheckoutManager {
     private void viewAlerts() {
         List<CheckoutStation> alertStations = stations.stream()
             .filter(CheckoutStation::getNeedsAssistance)
-            .toList();
+            .collect(Collectors.toList());
 
         if (alertStations.isEmpty()) {
             System.out.println("No stations currently need assistance.");

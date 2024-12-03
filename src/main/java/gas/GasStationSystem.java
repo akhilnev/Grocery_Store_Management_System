@@ -223,20 +223,42 @@ public class GasStationSystem {
     private void checkTirePressure() {
         System.out.println("\nTire Pressure Check & Fill Service");
         System.out.println("--------------------------------------------------");
-        System.out.print("Enter vehicle type (1. Car, 2. SUV, 3. Truck): ");
-        int vehicleType = scanner.nextInt();
-        scanner.nextLine();
-
-        int recommendedPSI;
-        switch (vehicleType) {
-            case 1: recommendedPSI = 32; break;
-            case 2: recommendedPSI = 35; break;
-            case 3: recommendedPSI = 45; break;
-            default: 
-                System.out.println("Invalid vehicle type");
-                return;
+        
+        int vehicleType = 0;
+        boolean validInput = false;
+        
+        while (!validInput) {
+            System.out.print("Enter vehicle type (1. Car, 2. SUV, 3. Truck): ");
+            try {
+                String input = scanner.nextLine();
+                vehicleType = Integer.parseInt(input);
+                if (vehicleType >= 1 && vehicleType <= 3) {
+                    validInput = true;
+                } else {
+                    System.out.println("Error: Please enter a number between 1 and 3.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Error: Please enter a valid number.");
+            }
         }
 
+        double recommendedPressure;
+        switch (vehicleType) {
+            case 1:
+                recommendedPressure = 32.0;
+                break;
+            case 2:
+                recommendedPressure = 35.0;
+                break;
+            case 3:
+                recommendedPressure = 40.0;
+                break;
+            default:
+                recommendedPressure = 32.0;
+        }
+
+        System.out.printf("Recommended tire pressure: %.1f PSI%n", recommendedPressure);
+        
         String[] tirePositions = {"Front Left", "Front Right", "Rear Left", "Rear Right"};
         Random random = new Random();
 
@@ -266,7 +288,7 @@ public class GasStationSystem {
             System.out.println(" \\                   /");
             System.out.println("  \\_________________/");
             
-            int currentPSI = recommendedPSI + random.nextInt(7) - 10;
+            int currentPSI = (int) (recommendedPressure + random.nextInt(7) - 10);
             
             for (int i = 0; i < 12; i++) {
                 int fluctuation = currentPSI + random.nextInt(5) - 2;
@@ -279,9 +301,9 @@ public class GasStationSystem {
             }
 
             System.out.printf("%n%nFinal reading: %d PSI%n", currentPSI);
-            System.out.printf("Recommended: %d PSI%n", recommendedPSI);
+            System.out.printf("Recommended: %d PSI%n", recommendedPressure);
             
-            if (currentPSI < recommendedPSI) {
+            if (currentPSI < recommendedPressure) {
                 System.out.println("\nTire needs air. Adding air...");
                 System.out.println("   _________________");
                 System.out.println("  /                 \\");
@@ -290,7 +312,7 @@ public class GasStationSystem {
                 System.out.println(" \\                   /");
                 System.out.println("  \\_________________/");
                 
-                while (currentPSI < recommendedPSI) {
+                while (currentPSI < recommendedPressure) {
                     currentPSI++;
                     int displayPSI = currentPSI + random.nextInt(2);
                     System.out.print("\rPressure: " + displayPSI + " PSI");
@@ -301,7 +323,7 @@ public class GasStationSystem {
                     }
                 }
                 System.out.println("\nAir added successfully!");
-            } else if (currentPSI > recommendedPSI) {
+            } else if (currentPSI > recommendedPressure) {
                 System.out.println("\nTire is over-inflated. Releasing air...");
                 System.out.println("   _________________");
                 System.out.println("  /                 \\");
@@ -310,7 +332,7 @@ public class GasStationSystem {
                 System.out.println(" \\                   /");
                 System.out.println("  \\_________________/");
                 
-                while (currentPSI > recommendedPSI) {
+                while (currentPSI > recommendedPressure) {
                     currentPSI--;
                     int displayPSI = currentPSI + random.nextInt(2);
                     System.out.print("\rPressure: " + displayPSI + " PSI");
