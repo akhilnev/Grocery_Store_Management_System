@@ -1,7 +1,7 @@
 /**
  * Manages the parking lot status including spaces and cart stations.
  *
- * @author Raghuram Guddati
+ * @author Chandrashekar Tirunagiri
  */
 package parking.model;
 

@@ -1,7 +1,7 @@
 /**
  * Manages self-checkout operations in the retail system.
  *
- * @author Raghuram Guddati
+ * @author Chandrashekar Tirunagiri
  */
 package checkout.service;
 

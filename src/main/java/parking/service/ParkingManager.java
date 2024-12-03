@@ -1,7 +1,7 @@
 /**
  * Manages parking lot operations and monitoring.
  *
- * @author Raghuram Guddati
+ * @author Chandrashekar Tirunagiri
  */
 package parking.service;
 

@@ -1,7 +1,7 @@
 /**
  * Represents a self-checkout station in the retail system.
  *
- * @author Raghuram Guddati
+ * @author Chandrashekar Tirunagir
  */
 package checkout.model;
 
