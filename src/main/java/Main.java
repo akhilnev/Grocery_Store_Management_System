@@ -5,6 +5,7 @@ import store.service.StoreManager;
 import security.service.SecurityManager;
 import assistance.service.CustomerAssistanceManager;
 import marketing.service.MarketingManager;
+import checkout.service.CheckoutManager; // Add this import
 import java.util.Scanner;
 import supplier.SupplierManagementSystem;
 import report.SalesReportSystem;
@@ -48,8 +49,9 @@ public class Main {
             System.out.println("12. Pharmacy Management (Pharmacy Technician)");
             System.out.println("13. Head Office Management (Head Office Manager)");
             System.out.println("14. Store Performance Analytics (Head Office Manager)");
-            System.out.println("15. Change Store");
-            System.out.println("16. Exit");
+            System.out.println("15. Self-Checkout Management (Supervisor)"); // Added this option
+            System.out.println("16. Change Store");
+            System.out.println("17. Exit");
             System.out.print("Choose a use case: ");
 
             int choice = scanner.nextInt();
@@ -93,20 +95,35 @@ public class Main {
                     new PharmacySystem(storeId).start();
                     break;
                 case 13:
-                    headOfficeManagementSystem.start(); // Access Head Office Management
+                    headOfficeManagementSystem.start();
                     break;
                 case 14:
                     headOfficeManagementSystem.viewStorePerformance();
                     break;
                 case 15:
-                    storeId = null; // Trigger store selection in next loop
+                    manageCheckoutSystem(storeId); // Added this case
                     break;
                 case 16:
+                    storeId = null;
+                    break;
+                case 17:
                     System.out.println("Exiting...");
                     return;
                 default:
                     System.out.println("Invalid option");
             }   
+        }
+    }
+
+    // Add this new method to handle self-checkout management
+    private static void manageCheckoutSystem(String storeId) {
+        System.out.println("\nAccessing Self-Checkout Management System for Store: " + storeId);
+        CheckoutManager checkoutManager = new CheckoutManager();
+        try {
+            checkoutManager.startCheckoutManagement();
+        } catch (Exception e) {
+            System.out.println("Error in self-checkout system: " + e.getMessage());
+            System.out.println("Please contact technical support if the issue persists.");
         }
     }
 
