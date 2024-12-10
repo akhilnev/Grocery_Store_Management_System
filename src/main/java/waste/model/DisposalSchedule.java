@@ -2,6 +2,13 @@ package waste.model;
 
 import java.time.LocalDateTime;
 
+/**
+ * Manages scheduling information for waste disposal pickups.
+ * This class handles vendor assignments, pickup times, and manifest generation
+ * for different categories of waste disposal.
+ *
+ * @author Hrishikesha Kyathsandra
+ */
 public class DisposalSchedule {
     private String vendorId;
     private String vendorName;

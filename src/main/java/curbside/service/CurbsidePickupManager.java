@@ -5,6 +5,14 @@ import java.util.*;
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
+/**
+ * Core manager for curbside pickup operations.
+ * Handles order processing, customer arrivals, and pickup coordination
+ * for the store's curbside service. Integrates with inventory management
+ * to ensure accurate order fulfillment.
+ *
+ * @author Hrishikesha Kyathsandra
+ */
 public class CurbsidePickupManager {
     private Map<String, CurbsideOrder> orders;
     private CurbsideInventoryManager inventoryManager;

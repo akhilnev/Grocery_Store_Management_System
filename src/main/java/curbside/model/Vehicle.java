@@ -1,5 +1,12 @@
 package curbside.model;
 
+/**
+ * Represents a customer's vehicle for curbside pickup.
+ * Stores vehicle details to help staff identify customers
+ * when they arrive for their curbside pickup orders.
+ *
+ * @author Hrishikesha Kyathsandra
+ */
 public class Vehicle {
     private String make;
     private String model;

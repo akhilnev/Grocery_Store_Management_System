@@ -1,13 +1,20 @@
 package curbside;
 
 import curbside.model.*;
-import curbside.service.CurbsidePickupManager;
-import curbside.service.CurbsideInventoryManager;
+import curbside.service.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Main system interface for curbside pickup operations.
+ * Provides the user interface and coordinates between different components
+ * of the curbside pickup service, including order management, inventory,
+ * and customer service.
+ *
+ * @author Hrishikesha Kyathsandra
+ */
 public class CurbsideSystem {
     private CurbsidePickupManager curbsideManager;
     private Scanner scanner;

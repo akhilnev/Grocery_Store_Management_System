@@ -1,5 +1,12 @@
 package curbside.model;
 
+/**
+ * Represents a product available for curbside pickup orders.
+ * Contains product details including identification, pricing,
+ * and availability status for the curbside service.
+ *
+ * @author Hrishikesha Kyathsandra
+ */
 public class Product {
     private String productId;
     private String name;

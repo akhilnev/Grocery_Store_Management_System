@@ -7,6 +7,14 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.io.*;
 
+/**
+ * Core system for managing waste and disposal operations in the store.
+ * Handles item tracking, disposal scheduling, donations, and reporting
+ * for the store's waste management processes. Integrates with vendors
+ * for proper disposal and maintains compliance records.
+ *
+ * @author Hrishikesha Kyathsandra
+ */
 public class WasteManagementSystem {
     private List<WasteItem> wasteItems;
     private List<DisposalSchedule> schedules;

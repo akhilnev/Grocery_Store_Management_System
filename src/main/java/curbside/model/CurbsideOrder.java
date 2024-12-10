@@ -4,6 +4,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.ArrayList;
 
+/**
+ * Represents a curbside pickup order in the store's curbside service.
+ * Tracks order details, customer information, pickup time, and order status
+ * for efficient curbside order management.
+ *
+ * @author Hrishikesha Kyathsandra
+ */
 public class CurbsideOrder {
     private String orderId;
     private String customerId;

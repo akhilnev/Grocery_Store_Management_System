@@ -1,5 +1,12 @@
 package curbside.model;
 
+/**
+ * Represents an individual item within a curbside pickup order.
+ * Tracks product details and quantity for each item in the order,
+ * facilitating accurate order fulfillment and inventory management.
+ *
+ * @author Hrishikesha Kyathsandra
+ */
 public class OrderItem {
     private String productId;
     private String productName;

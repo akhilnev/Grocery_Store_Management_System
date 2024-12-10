@@ -1,9 +1,16 @@
- package curbside.service;
+package curbside.service;
 
 import curbside.model.Product;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Manages inventory specifically for curbside pickup operations.
+ * Handles stock checking, reservation, and updates for items
+ * designated for curbside pickup orders.
+ *
+ * @author Hrishikesha Kyathsandra
+ */
 public class CurbsideInventoryManager {
     private Map<String, Product> inventory;
     

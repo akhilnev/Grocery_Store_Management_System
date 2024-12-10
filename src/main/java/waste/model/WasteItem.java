@@ -2,6 +2,13 @@ package waste.model;
 
 import java.time.LocalDateTime;
 
+/**
+ * Represents a waste item in the store's waste management system.
+ * This class tracks product details, expiration, status, and disposal methods
+ * for items that are flagged for waste management or donation.
+ *
+ * @author Hrishikesha Kyathsandra
+ */
 public class WasteItem {
     private String productId;
     private String name;
