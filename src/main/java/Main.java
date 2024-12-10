@@ -32,6 +32,7 @@ import greeter.service.GreeterManager;
 import deli.service.DeliCounterManager;
 import curbside.CurbsideSystem;
 import curbside.service.CurbsideInventoryManager;
+import waste.service.WasteManagementSystem;
 
 
 public class Main {
@@ -80,8 +81,9 @@ public class Main {
             System.out.println("26. Eye Test Management (Optometry Manager)");
             System.out.println("27. Curbside Pickup Management (Curbside Associate)");
             System.out.println("28. Training System (HR Manager)");
-            System.out.println("29. Change Store");
-            System.out.println("30. Exit");
+            System.out.println("29. Waste Management (Waste Manager)");
+            System.out.println("30. Change Store");
+            System.out.println("31. Exit");
             System.out.print("Choose a use case: ");
 
             int choice = scanner.nextInt();
@@ -173,11 +175,13 @@ public class Main {
                 case 28:
                     TrainingSystem.main(args);
                   break;
-                
                 case 29:
-                    storeId = null;
+                    new WasteManagementSystem(storeId).start();
                     break;
                 case 30:
+                    storeId = null;
+                    break;
+                case 31:
                     System.out.println("Exiting...");
                     return;
                 default:
