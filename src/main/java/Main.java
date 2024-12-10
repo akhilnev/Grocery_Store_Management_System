@@ -1,5 +1,6 @@
 import assistance.service.CustomerAssistanceManager;
 import employee.PayrollSystem;
+import employee.HealthcareManagementSystem;
 import gas.GasStationSystem;
 import headoffice.HeadOfficeManagementSystem;
 import inventory.InventoryManagementSystem;
@@ -59,8 +60,9 @@ public class Main {
             System.out.println("18. Delivery Management (Delivery Manager)");
             System.out.println("19. Donation Management (Community Manager)");
             System.out.println("20. Parking Management (Parking Supervisor)");
-            System.out.println("21. Change Store");
-            System.out.println("22. Exit");
+            System.out.println("21. Employee Healthcare Management (HR Manager)");
+            System.out.println("22. Change Store");
+            System.out.println("23. Exit");
             System.out.print("Choose a use case: ");
 
             int choice = scanner.nextInt();
@@ -128,9 +130,12 @@ public class Main {
                     new ParkingManager().startParkingManagement();
                     break;
                 case 21:
-                    storeId = null;
+                    new HealthcareManagementSystem(storeId).start();
                     break;
                 case 22:
+                    storeId = null;
+                    break;
+                case 23:
                     System.out.println("Exiting...");
                     return;
                 default:
