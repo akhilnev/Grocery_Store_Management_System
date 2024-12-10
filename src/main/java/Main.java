@@ -22,6 +22,8 @@ import checkout.service.CheckoutManager;
 import delivery.service.DeliveryManager;
 import donation.service.DonationManager;
 import parking.service.ParkingManager;
+import tastetest.service.TasteTestManager;
+import eyetest.service.EyeTestManager;
 import greeter.service.GreeterManager;
 import deli.service.DeliCounterManager;
 
@@ -62,13 +64,15 @@ public class Main {
             System.out.println("17. Self-Checkout Management (Checkout Supervisor)");
             System.out.println("18. Delivery Management (Delivery Manager)");
             System.out.println("19. Donation Management (Community Manager)");
-            System.out.println("20. Parking Management (Parking Supervisor)");
+            System.out.println("20. Parking Management (Parking Supervisor)");         
             System.out.println("21. Greeter Verification (Greeter)");
             System.out.println("22. Deli Counter Operations (Deli Clerk)");
             System.out.println("23. Employee Healthcare Management (HR Manager)");
             System.out.println("24. Energy Consumption Tracking (Store Manager)");
-            System.out.println("25. Change Store");
-            System.out.println("26. Exit");
+            System.out.println("25. Taste Test Management (Product Specialist)");
+            System.out.println("26. Eye Test Management (Optometry Manager)");
+            System.out.println("27. Change Store");
+            System.out.println("28. Exit");
             System.out.print("Choose a use case: ");
 
             int choice = scanner.nextInt();
@@ -148,9 +152,15 @@ public class Main {
                     new EnergyConsumptionSystem(storeId).start();
                     break;
                 case 25:
-                    storeId = null;
+                    new TasteTestManager().startTasteTestManagement();
                     break;
                 case 26:
+                    new EyeTestManager().startEyeTestManagement();
+                    break;
+                case 27:
+                    storeId = null;
+                    break;
+                case 28:
                     System.out.println("Exiting...");
                     return;
                 default:
