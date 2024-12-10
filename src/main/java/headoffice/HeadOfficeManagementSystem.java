@@ -11,12 +11,20 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.File;
 
+/**
+ * Head Office Management System for managing store operations, performance tracking, and administration.
+ * @author @AkhileshNevatia
+ */
 public class HeadOfficeManagementSystem {
     private StoreManager storeManager;
     private Scanner scanner;
     private static final String RECEIPTS_DIR = "src/main/java/store/data/receipts/";
     private StorePerformanceSystem performanceSystem;
 
+    /**
+     * Initializes the Head Office Management System with store management capabilities.
+     * @param storeManager The store manager instance to handle store operations
+     */
     public HeadOfficeManagementSystem(StoreManager storeManager) {
         this.storeManager = storeManager;
         this.scanner = new Scanner(System.in);
@@ -28,6 +36,10 @@ public class HeadOfficeManagementSystem {
         }
     }
 
+    /**
+     * Starts the head office management interface with main menu options.
+     * Provides options for adding/removing stores and viewing store information.
+     */
     public void start() {
         while (true) {
             System.out.println("\n--- Head Office Management ---");
@@ -58,6 +70,10 @@ public class HeadOfficeManagementSystem {
         }
     }
 
+    /**
+     * Displays information about all stores in the system including their IDs, names,
+     * locations, opening dates, and assigned managers.
+     */
     private void viewAllStores() {
         System.out.println("\n--- All Stores ---");
         for (Store store : storeManager.getAllStores()) {
@@ -71,6 +87,10 @@ public class HeadOfficeManagementSystem {
         }
     }
 
+    /**
+     * Handles the process of adding a new store to the system.
+     * Includes store creation, inventory setup, supplier notification, and manager assignment.
+     */
     private void addNewStore() {
         System.out.println("\n--- Add New Store ---");
         
@@ -112,6 +132,10 @@ public class HeadOfficeManagementSystem {
         System.out.println("Store setup complete and status updated.");
     }
 
+    /**
+     * Handles the process of removing a store from the system.
+     * Manages inventory redistribution, physical removal, and data archiving.
+     */
     private void removeStore() {
         System.out.println("\n--- Remove Store ---");
         System.out.print("Enter Store ID to remove: ");
@@ -149,6 +173,10 @@ public class HeadOfficeManagementSystem {
         }
     }
 
+    /**
+     * Assigns a manager to a specific store.
+     * @param store The store to assign a manager to
+     */
     private void assignStoreManager(Store store) {
         System.out.print("Enter Manager Name for store " + store.getStoreId() + ": ");
         String managerName = scanner.nextLine().trim();
@@ -163,12 +191,20 @@ public class HeadOfficeManagementSystem {
         }
     }
 
+    /**
+     * Manages the physical removal process of store inventory.
+     * @param storeId ID of the store being closed
+     */
     private void overseePhysicalRemoval(String storeId) {
         System.out.println("\nOverseeing physical removal of inventory for store: " + storeId);
         // Implementation details can be expanded as needed
         System.out.println("Physical removal completed for store: " + storeId);
     }
 
+    /**
+     * Provides interface for viewing store performance metrics including leaderboard,
+     * detailed metrics, and sales projections.
+     */
     public void viewStorePerformance() {
         while (true) {
             System.out.println("\n--- Store Performance Analytics ---");
