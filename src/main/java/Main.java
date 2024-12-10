@@ -26,6 +26,8 @@ import tastetest.service.TasteTestManager;
 import eyetest.service.EyeTestManager;
 import greeter.service.GreeterManager;
 import deli.service.DeliCounterManager;
+import curbside.CurbsideSystem;
+import curbside.service.CurbsideInventoryManager;
 
 public class Main {
     private static StoreManager storeManager = new StoreManager();
@@ -71,8 +73,9 @@ public class Main {
             System.out.println("24. Energy Consumption Tracking (Store Manager)");
             System.out.println("25. Taste Test Management (Product Specialist)");
             System.out.println("26. Eye Test Management (Optometry Manager)");
-            System.out.println("27. Change Store");
-            System.out.println("28. Exit");
+            System.out.println("27. Curbside Pickup Management (Curbside Associate)");
+            System.out.println("28. Change Store");
+            System.out.println("29. Exit");
             System.out.print("Choose a use case: ");
 
             int choice = scanner.nextInt();
@@ -158,9 +161,13 @@ public class Main {
                     new EyeTestManager().startEyeTestManagement();
                     break;
                 case 27:
-                    storeId = null;
+                    CurbsideInventoryManager curbsideInventoryManager = new CurbsideInventoryManager();
+                    new CurbsideSystem(storeId, curbsideInventoryManager).start();
                     break;
                 case 28:
+                    storeId = null;
+                    break;
+                case 29:
                     System.out.println("Exiting...");
                     return;
                 default:
