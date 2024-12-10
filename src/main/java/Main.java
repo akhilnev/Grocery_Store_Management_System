@@ -3,7 +3,10 @@ import checkout.service.CheckoutManager;
 import deli.service.DeliCounterManager;
 import delivery.service.DeliveryManager;
 import donation.service.DonationManager;
+import employee.HealthcareManagementSystem;
 import employee.PayrollSystem;
+import energy.EnergyConsumptionSystem;
+import eyetest.service.EyeTestManager;
 import gas.GasStationSystem;
 import greeter.service.GreeterManager;
 import headoffice.HeadOfficeManagementSystem;
@@ -22,7 +25,7 @@ import security.service.SecurityManager;
 import store.model.Store;
 import store.service.StoreManager;
 import supplier.SupplierManagementSystem;
-import training.TrainingSystem;
+import tastetest.service.TasteTestManager;
 
 public class Main {
     private static StoreManager storeManager = new StoreManager();
@@ -61,12 +64,15 @@ public class Main {
             System.out.println("17. Self-Checkout Management (Checkout Supervisor)");
             System.out.println("18. Delivery Management (Delivery Manager)");
             System.out.println("19. Donation Management (Community Manager)");
-            System.out.println("20. Parking Management (Parking Supervisor)");
+            System.out.println("20. Parking Management (Parking Supervisor)");         
             System.out.println("21. Greeter Verification (Greeter)");
             System.out.println("22. Deli Counter Operations (Deli Clerk)");
-            System.out.println("23. Online Training and Development System");
-            System.out.println("24. Change Store");
-            System.out.println("25. Exit");
+            System.out.println("23. Employee Healthcare Management (HR Manager)");
+            System.out.println("24. Energy Consumption Tracking (Store Manager)");
+            System.out.println("25. Taste Test Management (Product Specialist)");
+            System.out.println("26. Eye Test Management (Optometry Manager)");
+            System.out.println("27. Change Store");
+            System.out.println("28. Exit");
             System.out.print("Choose a use case: ");
 
             int choice = scanner.nextInt();
@@ -140,12 +146,21 @@ public class Main {
                     new DeliCounterManager().startDeliOperations();
                     break;
                 case 23:
-                    TrainingSystem.main(new String[]{}); // Start the Training System
+                    new HealthcareManagementSystem(storeId).start();
                     break;
                 case 24:
-                    storeId = null;
+                    new EnergyConsumptionSystem(storeId).start();
                     break;
                 case 25:
+                    new TasteTestManager().startTasteTestManagement();
+                    break;
+                case 26:
+                    new EyeTestManager().startEyeTestManagement();
+                    break;
+                case 27:
+                    storeId = null;
+                    break;
+                case 28:
                     System.out.println("Exiting...");
                     return;
                 default:
