@@ -1,6 +1,11 @@
 import assistance.service.CustomerAssistanceManager;
+import checkout.service.CheckoutManager;
+import deli.service.DeliCounterManager;
+import delivery.service.DeliveryManager;
+import donation.service.DonationManager;
 import employee.PayrollSystem;
 import gas.GasStationSystem;
+import greeter.service.GreeterManager;
 import headoffice.HeadOfficeManagementSystem;
 import inventory.InventoryManagementSystem;
 import java.util.Scanner;
@@ -9,6 +14,7 @@ import loyalty.LoyaltySystem;
 import maintenance.MaintenanceSystem;
 import marketing.service.MarketingManager;
 import order.OrderManagementSystem;
+import parking.service.ParkingManager;
 import pharmacy.PharmacySystem;
 import report.SalesReportSystem;
 import returns.ReturnManagementSystem;
@@ -16,12 +22,7 @@ import security.service.SecurityManager;
 import store.model.Store;
 import store.service.StoreManager;
 import supplier.SupplierManagementSystem;
-import checkout.service.CheckoutManager;
-import delivery.service.DeliveryManager;
-import donation.service.DonationManager;
-import parking.service.ParkingManager;
-import greeter.service.GreeterManager;
-import deli.service.DeliCounterManager;
+import training.TrainingSystem;
 
 public class Main {
     private static StoreManager storeManager = new StoreManager();
@@ -63,8 +64,9 @@ public class Main {
             System.out.println("20. Parking Management (Parking Supervisor)");
             System.out.println("21. Greeter Verification (Greeter)");
             System.out.println("22. Deli Counter Operations (Deli Clerk)");
-            System.out.println("21. Change Store");
-            System.out.println("22. Exit");
+            System.out.println("23. Online Training and Development System");
+            System.out.println("24. Change Store");
+            System.out.println("25. Exit");
             System.out.print("Choose a use case: ");
 
             int choice = scanner.nextInt();
@@ -138,9 +140,12 @@ public class Main {
                     new DeliCounterManager().startDeliOperations();
                     break;
                 case 23:
-                    storeId = null;
+                    TrainingSystem.main(new String[]{}); // Start the Training System
                     break;
                 case 24:
+                    storeId = null;
+                    break;
+                case 25:
                     System.out.println("Exiting...");
                     return;
                 default:
