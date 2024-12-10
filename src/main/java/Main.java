@@ -26,6 +26,7 @@ import store.model.Store;
 import store.service.StoreManager;
 import supplier.SupplierManagementSystem;
 import tastetest.service.TasteTestManager;
+import training.TrainingSystem;
 
 public class Main {
     private static StoreManager storeManager = new StoreManager();
@@ -71,8 +72,9 @@ public class Main {
             System.out.println("24. Energy Consumption Tracking (Store Manager)");
             System.out.println("25. Taste Test Management (Product Specialist)");
             System.out.println("26. Eye Test Management (Optometry Manager)");
-            System.out.println("27. Change Store");
-            System.out.println("28. Exit");
+            System.out.println("27. Training System (HR Manager)");
+            System.out.println("28. Change Store");
+            System.out.println("29. Exit");
             System.out.print("Choose a use case: ");
 
             int choice = scanner.nextInt();
@@ -158,9 +160,12 @@ public class Main {
                     new EyeTestManager().startEyeTestManagement();
                     break;
                 case 27:
-                    storeId = null;
+                    TrainingSystem.main(args);
                     break;
                 case 28:
+                    storeId = null;
+                    break;
+                case 29:
                     System.out.println("Exiting...");
                     return;
                 default:
