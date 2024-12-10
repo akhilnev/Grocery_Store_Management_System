@@ -5,22 +5,39 @@ import store.service.StoreManager;
 import java.util.*;
 import java.time.LocalDate;
 
+/**
+ * System for tracking and analyzing store performance metrics, generating reports and projections.
+ * @author @AkhileshNevatia
+ */
 public class StorePerformanceSystem {
     private StoreManager storeManager;
     private Map<String, StoreMetrics> storeMetricsMap;
 
+    /**
+     * Initializes the Store Performance System with a store manager.
+     * @param storeManager The store manager instance to track store metrics
+     */
     public StorePerformanceSystem(StoreManager storeManager) {
         this.storeManager = storeManager;
         this.storeMetricsMap = new HashMap<>();
         initializeMetrics();
     }
 
+    /**
+     * Initializes performance metrics for all stores in the system.
+     * Creates new StoreMetrics instances for each store.
+     */
     private void initializeMetrics() {
         for (Store store : storeManager.getAllStores()) {
             storeMetricsMap.put(store.getStoreId(), new StoreMetrics());
         }
     }
 
+    /**
+     * Generates and displays a performance leaderboard for all stores.
+     * Ranks stores based on total score and shows key metrics including sales,
+     * customer satisfaction, and inventory turnover.
+     */
     public void generateLeaderboard() {
         List<Map.Entry<String, StoreMetrics>> leaderboard = new ArrayList<>(storeMetricsMap.entrySet());
         leaderboard.sort((a, b) -> Double.compare(b.getValue().getTotalScore(), a.getValue().getTotalScore()));
@@ -38,6 +55,11 @@ public class StorePerformanceSystem {
         }
     }
 
+    /**
+     * Displays detailed performance metrics for a specific store.
+     * Shows comprehensive metrics including sales, customer, and inventory data.
+     * @param storeId The ID of the store to view metrics for
+     */
     public void viewDetailedMetrics(String storeId) {
         StoreMetrics metrics = storeMetricsMap.get(storeId);
         if (metrics == null) {
@@ -63,6 +85,11 @@ public class StorePerformanceSystem {
         System.out.printf("- Wastage Rate: %.1f%%%n", metrics.getWastageRate());
     }
 
+    /**
+     * Generates sales projections for a specific store based on current metrics.
+     * Calculates growth factors and confidence intervals for future sales estimates.
+     * @param storeId The ID of the store to generate projections for
+     */
     public void generateSalesProjections(String storeId) {
         StoreMetrics metrics = storeMetricsMap.get(storeId);
         if (metrics == null) {
@@ -104,6 +131,11 @@ public class StorePerformanceSystem {
             projectedSales * (1 + confidenceInterval));
     }
 
+    /**
+     * Calculates inventory efficiency score based on turnover, stockout, and wastage rates.
+     * @param metrics The store metrics to calculate efficiency for
+     * @return A normalized efficiency score between 0 and 1
+     */
     private double calculateInventoryEfficiency(StoreMetrics metrics) {
         // Higher inventory turnover is good, but high stockout rate is bad
         double turnoverScore = Math.min(metrics.getInventoryTurnover() / 8.0, 1.0); // normalize to max of 1.0
@@ -113,6 +145,11 @@ public class StorePerformanceSystem {
         return Math.max(0, turnoverScore - (stockoutPenalty + wastagePenalty));
     }
 
+    /**
+     * Calculates confidence interval for sales projections based on metric volatility.
+     * @param metrics The store metrics to calculate confidence interval from
+     * @return A confidence interval value as a decimal
+     */
     private double calculateConfidenceInterval(StoreMetrics metrics) {
         // Base confidence interval starts at 5%
         double baseInterval = 0.05;
@@ -144,6 +181,10 @@ public class StorePerformanceSystem {
     }
 }
 
+/**
+ * Contains performance metrics for an individual store.
+ * Includes sales, customer satisfaction, inventory, and operational metrics.
+ */
 class StoreMetrics {
     private double totalSales;
     private double customerSatisfaction;
@@ -153,6 +194,10 @@ class StoreMetrics {
     private double stockoutRate;
     private double wastageRate;
 
+    /**
+     * Initializes store metrics with randomized sample data.
+     * In production, these would be populated from actual store data.
+     */
     public StoreMetrics() {
         // Initialize with sample data (in real implementation, these would come from database)
         this.totalSales = Math.random() * 100000;
@@ -164,15 +209,32 @@ class StoreMetrics {
         this.wastageRate = Math.random() * 3;
     }
 
-    // Getters
+    // Getters with added documentation
+    /** @return Total sales value for the store */
     public double getTotalSales() { return totalSales; }
+    
+    /** @return Customer satisfaction rating out of 5.0 */
     public double getCustomerSatisfaction() { return customerSatisfaction; }
+    
+    /** @return Inventory turnover rate */
     public double getInventoryTurnover() { return inventoryTurnover; }
+    
+    /** @return Average daily customer footfall */
     public int getDailyFootfall() { return dailyFootfall; }
+    
+    /** @return Customer conversion rate as a percentage */
     public double getConversionRate() { return conversionRate; }
+    
+    /** @return Stock-out rate as a percentage */
     public double getStockoutRate() { return stockoutRate; }
+    
+    /** @return Wastage rate as a percentage */
     public double getWastageRate() { return wastageRate; }
+    
+    /** @return Average daily sales */
     public double getDailyAverage() { return totalSales / 30; }
+    
+    /** @return Composite performance score based on sales, satisfaction, and inventory */
     public double getTotalScore() { 
         return (totalSales / 10000) + (customerSatisfaction * 10) + inventoryTurnover;
     }
