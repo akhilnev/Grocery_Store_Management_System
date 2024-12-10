@@ -32,6 +32,7 @@ import training.TrainingSystem;
 import waste.service.WasteManagementSystem;
 
 
+
 public class Main {
     private static StoreManager storeManager = new StoreManager();
     private static HeadOfficeManagementSystem headOfficeManagementSystem = new HeadOfficeManagementSystem(storeManager);
