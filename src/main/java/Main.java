@@ -43,7 +43,7 @@ public class Main {
         
         while (true) {
             if (storeId == null) {
-                storeId = selectStore();
+                storeId = selectStore();   
                 if (storeId == null) {
                     System.out.println("Exiting...");
                     break;
@@ -80,7 +80,7 @@ public class Main {
             System.out.println("27. Curbside Pickup Management (Curbside Associate)");
             System.out.println("28. Training System (HR Manager)");
             System.out.println("29. Waste Management (Waste Manager)");
-            System.out.println("30.  Supplier Management (Store Employee)");
+            System.out.println("30. External Vendor Management (Store Employee)");
             System.out.println("31. Change Store");
             System.out.println("32. Exit");
             System.out.print("Choose a use case: ");
