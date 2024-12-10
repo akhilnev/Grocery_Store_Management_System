@@ -1,5 +1,7 @@
 import assistance.service.CustomerAssistanceManager;
 import employee.PayrollSystem;
+import employee.HealthcareManagementSystem;
+import energy.EnergyConsumptionSystem;
 import gas.GasStationSystem;
 import headoffice.HeadOfficeManagementSystem;
 import inventory.InventoryManagementSystem;
@@ -63,8 +65,10 @@ public class Main {
             System.out.println("20. Parking Management (Parking Supervisor)");
             System.out.println("21. Greeter Verification (Greeter)");
             System.out.println("22. Deli Counter Operations (Deli Clerk)");
-            System.out.println("21. Change Store");
-            System.out.println("22. Exit");
+            System.out.println("23. Employee Healthcare Management (HR Manager)");
+            System.out.println("24. Energy Consumption Tracking (Store Manager)");
+            System.out.println("25. Change Store");
+            System.out.println("26. Exit");
             System.out.print("Choose a use case: ");
 
             int choice = scanner.nextInt();
@@ -138,9 +142,15 @@ public class Main {
                     new DeliCounterManager().startDeliOperations();
                     break;
                 case 23:
-                    storeId = null;
+                    new HealthcareManagementSystem(storeId).start();
                     break;
                 case 24:
+                    new EnergyConsumptionSystem(storeId).start();
+                    break;
+                case 25:
+                    storeId = null;
+                    break;
+                case 26:
                     System.out.println("Exiting...");
                     return;
                 default:
