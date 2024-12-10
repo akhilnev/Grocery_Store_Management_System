@@ -1,8 +1,14 @@
 import assistance.service.CustomerAssistanceManager;
-import employee.PayrollSystem;
+import checkout.service.CheckoutManager;
+import deli.service.DeliCounterManager;
+import delivery.service.DeliveryManager;
+import donation.service.DonationManager;
 import employee.HealthcareManagementSystem;
+import employee.PayrollSystem;
 import energy.EnergyConsumptionSystem;
+import eyetest.service.EyeTestManager;
 import gas.GasStationSystem;
+import greeter.service.GreeterManager;
 import headoffice.HeadOfficeManagementSystem;
 import inventory.InventoryManagementSystem;
 import java.util.Scanner;
@@ -11,6 +17,7 @@ import loyalty.LoyaltySystem;
 import maintenance.MaintenanceSystem;
 import marketing.service.MarketingManager;
 import order.OrderManagementSystem;
+import parking.service.ParkingManager;
 import pharmacy.PharmacySystem;
 import report.SalesReportSystem;
 import returns.ReturnManagementSystem;
@@ -18,16 +25,14 @@ import security.service.SecurityManager;
 import store.model.Store;
 import store.service.StoreManager;
 import supplier.SupplierManagementSystem;
-import checkout.service.CheckoutManager;
-import delivery.service.DeliveryManager;
-import donation.service.DonationManager;
-import parking.service.ParkingManager;
 import tastetest.service.TasteTestManager;
+import training.TrainingSystem;
 import eyetest.service.EyeTestManager;
 import greeter.service.GreeterManager;
 import deli.service.DeliCounterManager;
 import curbside.CurbsideSystem;
 import curbside.service.CurbsideInventoryManager;
+
 
 public class Main {
     private static StoreManager storeManager = new StoreManager();
@@ -74,8 +79,9 @@ public class Main {
             System.out.println("25. Taste Test Management (Product Specialist)");
             System.out.println("26. Eye Test Management (Optometry Manager)");
             System.out.println("27. Curbside Pickup Management (Curbside Associate)");
-            System.out.println("28. Change Store");
-            System.out.println("29. Exit");
+            System.out.println("28. Training System (HR Manager)");
+            System.out.println("29. Change Store");
+            System.out.println("30. Exit");
             System.out.print("Choose a use case: ");
 
             int choice = scanner.nextInt();
@@ -162,12 +168,16 @@ public class Main {
                     break;
                 case 27:
                     CurbsideInventoryManager curbsideInventoryManager = new CurbsideInventoryManager();
-                    new CurbsideSystem(storeId, curbsideInventoryManager).start();
-                    break;
+                     new CurbsideSystem(storeId, curbsideInventoryManager).start();
+                     break;                  
                 case 28:
+                    TrainingSystem.main(args);
+                  break;
+                
+                case 29:
                     storeId = null;
                     break;
-                case 29:
+                case 30:
                     System.out.println("Exiting...");
                     return;
                 default:
