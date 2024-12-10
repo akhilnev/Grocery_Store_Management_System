@@ -22,6 +22,8 @@ import checkout.service.CheckoutManager;
 import delivery.service.DeliveryManager;
 import donation.service.DonationManager;
 import parking.service.ParkingManager;
+import greeter.service.GreeterManager;
+import deli.service.DeliCounterManager;
 
 public class Main {
     private static StoreManager storeManager = new StoreManager();
@@ -61,6 +63,8 @@ public class Main {
             System.out.println("18. Delivery Management (Delivery Manager)");
             System.out.println("19. Donation Management (Community Manager)");
             System.out.println("20. Parking Management (Parking Supervisor)");
+            System.out.println("21. Greeter Verification (Greeter)");
+            System.out.println("22. Deli Counter Operations (Deli Clerk)");
             System.out.println("23. Employee Healthcare Management (HR Manager)");
             System.out.println("24. Energy Consumption Tracking (Store Manager)");
             System.out.println("25. Change Store");
@@ -130,6 +134,12 @@ public class Main {
                     break;
                 case 20:
                     new ParkingManager().startParkingManagement();
+                    break;
+                case 21:
+                    new GreeterManager().startGreeterVerification();
+                    break;
+                case 22:
+                    new DeliCounterManager().startDeliOperations();
                     break;
                 case 23:
                     new HealthcareManagementSystem(storeId).start();
