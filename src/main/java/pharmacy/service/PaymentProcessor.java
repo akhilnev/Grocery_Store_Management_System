@@ -6,41 +6,58 @@ package pharmacy.service;
  *
  * @author Hrishikesha Kyathsandra
  */
-
-/**
- * Processes different payment methods for pharmacy transactions.
- * Supports insurance verification, cash handling, and card processing.
- */
 public class PaymentProcessor {
-    public boolean processPayment(String paymentMethod, double amount) {
+    public boolean processPayment(String paymentMethod, double amount, String... details) {
         System.out.printf("\nProcessing %s payment of $%.2f\n", paymentMethod, amount);
         
         switch (paymentMethod) {
             case "INSURANCE":
-                System.out.println("Verifying insurance coverage...");
-                return processInsurancePayment(amount);
+                if (details.length >= 2) {
+                    String memberId = details[0];
+                    String medication = details[1];
+                    System.out.println("Verifying insurance coverage for member: " + memberId);
+                    System.out.println("Checking coverage for: " + medication);
+                    
+                    try {
+                        Thread.sleep(2000);  // Simulate verification delay
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    }
+                    
+                    if (memberId.length() >= 8) {
+                        System.out.println("Insurance coverage verified");
+                        System.out.printf("Covered amount: $%.2f%n", amount);
+                        return true;
+                    }
+                    System.out.println("Insurance verification failed");
+                }
+                return false;
+                
             case "CASH":
-                return processCashPayment(amount);
+                System.out.printf("Cash payment received: $%.2f%n", amount);
+                return true;
+                
             case "CARD":
-                return processCardPayment(amount);
+                if (details.length >= 3) {
+                    String cardNumber = details[0];
+                    String expDate = details[1];
+                    String cvv = details[2];
+                    
+                    boolean isValid = cardNumber.length() >= 15 && 
+                                    cardNumber.length() <= 16 &&
+                                    expDate.matches("\\d{2}/\\d{2}") &&
+                                    cvv.length() >= 3;
+                    
+                    if (isValid) {
+                        System.out.printf("Card payment processed: $%.2f%n", amount);
+                        return true;
+                    }
+                    System.out.println("Invalid card details");
+                }
+                return false;
+                
             default:
                 return false;
         }
-    }
-
-    private boolean processInsurancePayment(double amount) {
-        // Simplified insurance verification
-        System.out.println("Insurance coverage verified");
-        return true;
-    }
-
-    private boolean processCashPayment(double amount) {
-        System.out.println("Cash payment received");
-        return true;
-    }
-
-    private boolean processCardPayment(double amount) {
-        System.out.println("Card payment processed");
-        return true;
     }
 }
