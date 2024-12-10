@@ -1,3 +1,2 @@
-OrderID | Items               | TotalPrice
-------------------------------------------
-O1733808841763|Turkey Slices x2.0 lb|17.98
+OrderID | Items | TotalPrice | LabelNumber | TokenNumber | Status
+----------------------------------------------------------------------
