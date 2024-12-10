@@ -1051,34 +1051,7 @@ private void applyNormalWeather() {
     }
 
     private void displayCameraFeed(String cameraType, ParkingStatus section) {
-        // Simulate camera view using ASCII art
-        System.out.println("╔═══════════════════╗");
-        System.out.println("║ " + cameraType + " View        ║");
-        System.out.println("║                   ║");
-        if (section.isCamerasOperational()) {
-            switch (cameraType) {
-                case "Entry" -> {
-                    System.out.println("║     ╔═════╗       ║");
-                    System.out.println("║  ░░ ║     ║ ░░    ║");
-                    System.out.println("║  ░░ ╚═════╝ ░░    ║");
-                }
-                case "Exit" -> {
-                    System.out.println("║    ═══════►       ║");
-                    System.out.println("║        ▲          ║");
-                    System.out.println("║        ║          ║");
-                }
-                case "Overview" -> {
-                    System.out.println("║  ▓▓▓ ▓▓▓ ▓▓▓     ║");
-                    System.out.println("║  ▓▓▓ ▓▓▓ ▓▓▓     ║");
-                    System.out.println("║  ▓▓▓ ▓▓▓ ▓▓▓     ║");
-                }
-            }
-        } else {
-            System.out.println("║   NO SIGNAL        ║");
-            System.out.println("║   CHECK CAMERA     ║");
-            System.out.println("║    OFFLINE    ║");
-        }
-        System.out.println("╚═══════════════════╝");
+
     }
 
     private void showDetectedActivity(ParkingStatus section) {

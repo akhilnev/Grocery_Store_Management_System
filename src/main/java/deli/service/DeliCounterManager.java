@@ -157,7 +157,7 @@ public class DeliCounterManager {
                     }
                 }
                 if (hasAllergen) {
-                    System.out.println("⚠️ WARNING: This item contains allergens!");
+                    System.out.println(" WARNING: This item contains allergens!");
                     System.out.print("Proceed with order? (Y/N): ");
                     if (!scanner.nextLine().trim().equalsIgnoreCase("Y")) {
                         continue;
@@ -221,7 +221,7 @@ public class DeliCounterManager {
         }
 
         if (!allergyWarnings.isEmpty()) {
-            System.out.println("\n⚠️ ALLERGY WARNINGS ⚠️");
+            System.out.println("\n ALLERGY WARNINGS ");
             System.out.println("-".repeat(30));
             allergyWarnings.forEach(warning -> 
                 System.out.println("  - " + warning));
@@ -342,7 +342,7 @@ public class DeliCounterManager {
         for (DeliItem item : inventory) {
             if (item.needsRestocking()) {
                 needsRestock = true;
-                System.out.printf("⚠️ Low Stock: %s - Current Level: %d%n", 
+                System.out.printf(" Low Stock: %s - Current Level: %d%n", 
                     item.getName(), item.getStockLevel());
             }
         }

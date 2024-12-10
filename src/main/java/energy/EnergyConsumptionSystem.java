@@ -287,7 +287,7 @@ public class EnergyConsumptionSystem {
             );
             alerts.add(alert);
             saveData();
-            System.out.println("⚠️ Alert: Energy spike detected for device " + newReading.deviceId);
+            System.out.println(" Alert: Energy spike detected for device " + newReading.deviceId);
         }
     }
 

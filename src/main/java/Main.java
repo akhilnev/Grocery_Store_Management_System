@@ -27,6 +27,12 @@ import store.service.StoreManager;
 import supplier.SupplierManagementSystem;
 import tastetest.service.TasteTestManager;
 import training.TrainingSystem;
+import eyetest.service.EyeTestManager;
+import greeter.service.GreeterManager;
+import deli.service.DeliCounterManager;
+import curbside.CurbsideSystem;
+import curbside.service.CurbsideInventoryManager;
+
 
 public class Main {
     private static StoreManager storeManager = new StoreManager();
@@ -72,9 +78,10 @@ public class Main {
             System.out.println("24. Energy Consumption Tracking (Store Manager)");
             System.out.println("25. Taste Test Management (Product Specialist)");
             System.out.println("26. Eye Test Management (Optometry Manager)");
-            System.out.println("27. Training System (HR Manager)");
-            System.out.println("28. Change Store");
-            System.out.println("29. Exit");
+            System.out.println("27. Curbside Pickup Management (Curbside Associate)");
+            System.out.println("28. Training System (HR Manager)");
+            System.out.println("29. Change Store");
+            System.out.println("30. Exit");
             System.out.print("Choose a use case: ");
 
             int choice = scanner.nextInt();
@@ -160,12 +167,17 @@ public class Main {
                     new EyeTestManager().startEyeTestManagement();
                     break;
                 case 27:
-                    TrainingSystem.main(args);
-                    break;
+                    CurbsideInventoryManager curbsideInventoryManager = new CurbsideInventoryManager();
+                     new CurbsideSystem(storeId, curbsideInventoryManager).start();
+                     break;                  
                 case 28:
+                    TrainingSystem.main(args);
+                  break;
+                
+                case 29:
                     storeId = null;
                     break;
-                case 29:
+                case 30:
                     System.out.println("Exiting...");
                     return;
                 default:
