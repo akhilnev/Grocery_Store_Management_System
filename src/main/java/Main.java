@@ -1,5 +1,7 @@
 import assistance.service.CustomerAssistanceManager;
 import checkout.service.CheckoutManager;
+import curbside.CurbsideSystem;
+import curbside.service.CurbsideInventoryManager;
 import deli.service.DeliCounterManager;
 import delivery.service.DeliveryManager;
 import donation.service.DonationManager;
@@ -27,11 +29,6 @@ import store.service.StoreManager;
 import supplier.SupplierManagementSystem;
 import tastetest.service.TasteTestManager;
 import training.TrainingSystem;
-import eyetest.service.EyeTestManager;
-import greeter.service.GreeterManager;
-import deli.service.DeliCounterManager;
-import curbside.CurbsideSystem;
-import curbside.service.CurbsideInventoryManager;
 import waste.service.WasteManagementSystem;
 
 
@@ -55,7 +52,7 @@ public class Main {
             System.out.println("\nGrocery Store Management System");
             System.out.println("1. Inventory Management (Store Manager)");
             System.out.println("2. Order Management (Store Cashier)");
-            System.out.println("3. Supplier Management (Store Employee)");
+            System.out.println("3. Procurement Oversight (Store Employee)");
             System.out.println("4. Sales Report (Store Manager)");
             System.out.println("5. Returns and Refunds (Store Cashier)");
             System.out.println("6. Employee Payroll (HR Manager)");
@@ -82,8 +79,9 @@ public class Main {
             System.out.println("27. Curbside Pickup Management (Curbside Associate)");
             System.out.println("28. Training System (HR Manager)");
             System.out.println("29. Waste Management (Waste Manager)");
-            System.out.println("30. Change Store");
-            System.out.println("31. Exit");
+            System.out.println("30.  Supplier Management (Store Employee)");
+            System.out.println("31. Change Store");
+            System.out.println("32. Exit");
             System.out.print("Choose a use case: ");
 
             int choice = scanner.nextInt();
@@ -178,10 +176,15 @@ public class Main {
                 case 29:
                     new WasteManagementSystem(storeId).start();
                     break;
+
                 case 30:
+                    new SupplierManagementSystem(storeId).start();
+                    break;
+
+                case 31:
                     storeId = null;
                     break;
-                case 31:
+                case 32:
                     System.out.println("Exiting...");
                     return;
                 default:
